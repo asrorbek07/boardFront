@@ -1,17 +1,17 @@
-import {useMutation} from "@tanstack/react-query";
-import {AxiosResponse} from "axios";
-import {CommandResponse, FirstParameter} from "@vizendjs/accent";
-import {FaqBoardFlowApi, FaqPostFlowApi} from "~/apis";
+import {useQuery, UseQueryResult} from "@tanstack/react-query";
+import {QueryResponse} from "@vizendjs/accent";
+import {FaqPostSeekApi} from "~/apis";
+import {FaqPostRdo} from "~/models";
 
-export const useFaqPost = () => {
+export const useFaqPost = (postId: string | undefined) => {
     //
+    const {queryKey, queryFn} = FaqPostSeekApi.query.findFaqPost({postId:postId});
+    const {data, refetch}: UseQueryResult<QueryResponse<FaqPostRdo>> = useQuery({
+        queryKey,
+        queryFn,
+    });
     return {
-        mutation: {
-            registerFaqPost: useMutation<
-                AxiosResponse<CommandResponse>,
-                unknown,
-                FirstParameter<typeof FaqPostFlowApi.registerFaqPost>
-            >(FaqPostFlowApi.registerFaqPost as any),
-        },
+        postRdo: data?.queryResult,
+        refetchPostRdo: refetch,
     }
 }

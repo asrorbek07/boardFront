@@ -7,10 +7,10 @@ import {FaqBoard} from "~/components/faq/FaqBoard/FaqBoard";
 export const FaqBoardPage = () => {
     //
     const navigate = useNavigate();
-    const handleFaqBoard = () => navigate(`board`);
+    const handleNewFaqPost = () => navigate(`post/new`);
 
     return (
-        <FaqBoard/>
+        <FaqBoard onNewPost ={handleNewFaqPost}/>
     );
 };
 

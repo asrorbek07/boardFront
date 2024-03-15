@@ -11,7 +11,7 @@ export const useFaqBoard = (boardId: string | undefined) => {
         queryFn,
     });
     return {
-        board: data?.queryResult || {},
+        board: data?.queryResult,
         refetchBoard: refetch,
     }
 }

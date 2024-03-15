@@ -12,6 +12,7 @@ export const FaqBoardList = (
 ) => {
 
     const { boards } =  useFaqBoardList();
+    console.log("Check")
     return (
         <Stack>
             <Box sx={{ width: '30%', maxWidth: 360, bgcolor: 'background.paper' }}>
@@ -20,7 +21,7 @@ export const FaqBoardList = (
                     <List>
                 {
                     boards.map(board => (
-                        <FaqBoardItem board={board}/>
+                        <FaqBoardItem key={board.id} board={board}/>
                     ))
                 }
                     </List>

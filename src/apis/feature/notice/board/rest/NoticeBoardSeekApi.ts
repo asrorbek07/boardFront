@@ -7,7 +7,7 @@ import { FindNoticeBoardQuery, FindNoticeBoardsQuery } from '../query';
 const url = (path: string) => `/api/board/feature/notice/board${path}`;
 
 const findNoticeBoard = <T = Board>(params: {
-  postId?: string,
+  boardId?: string,
 }) => {
   const query = <FindNoticeBoardQuery>{ ...params };
   return axios.post<QueryResponse<T[]>>(url('/find-notice-board/query'), query);

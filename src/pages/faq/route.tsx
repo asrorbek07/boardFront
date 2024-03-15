@@ -20,7 +20,7 @@ export const route: RouteObject = {
             element: <IndexPage/>,
         },
         {
-            path: 'boards',
+            path: 'board',
             element: <Outlet/>,
             handle: {
                 title: 'FAQ Board',
@@ -45,28 +45,29 @@ export const route: RouteObject = {
                 {
                     path: ':boardId',
 
-                    element: <FaqBoardPage/>,
+                    element: <Outlet/>,
                     handle: {
                         title: 'FAQ Board',
                         type: "none",
                     },
-                },
-            ],
-        },
-        {
-            path: 'post',
-            element: <Outlet/>,
-            handle: {
-                title: 'FAQ Post',
-            },
-            children: [
-                {
-                    path: 'new',
-                    element: <NewFaqPostPage/>,
-                    handle: {
-                        title: 'New FAQ Post',
-                        type: "none",
-                    },
+                    children:[
+                        {
+                            path:"",
+                            element: <FaqBoardPage/>,
+                            handle: {
+                                title: 'FAQ Board and Post List',
+                                type: "none",
+                            },
+                        },
+                        {
+                         path:'post/new',
+                         element:<NewFaqPostPage/>,
+                         handle:{
+                             title:'New FAQ Post',
+                             type:'none',
+                         }
+                        },
+                    ],
                 },
             ],
         },

@@ -9,7 +9,8 @@ import {FaqPostCdo} from '~/models';
 import {useSnackbar} from 'notistack';
 
 import {Controller, useForm} from 'react-hook-form';
-import {useFaqPost} from '../hooks';
+import {useFaqPostRegister} from '../hooks';
+import {useParams} from "react-router-dom";
 
 
 export const NewFaqPost = ({
@@ -20,9 +21,10 @@ export const NewFaqPost = ({
     onCancel?: () => void;
 }) => {
     const {enqueueSnackbar} = useSnackbar();
+    const params = useParams<{boardId:string}>();
     const {
         mutation: {registerFaqPost},
-    } = useFaqPost();
+    } = useFaqPostRegister();
     const {
         register,
         handleSubmit,
@@ -32,7 +34,7 @@ export const NewFaqPost = ({
         defaultValues: {
             title: '',
             content: '',
-            boardId: '',
+            boardId: params.boardId,
         },
     });
 
@@ -121,20 +123,20 @@ export const NewFaqPost = ({
                                 name={'content'}
                                 control={control}
                             />
-                            <Controller
-                                render={({field}) => (
-                                    <TextField
-                                        fullWidth
-                                        label={'BoardId'}
-                                        error={!!errors?.boardId}
-                                        helperText={
-                                            errors?.boardId && 'BoardId is required.'}
-                                        {...register('boardId', {required: true, maxLength: 20})}
-                                    />
-                                )}
-                                name={'boardId'}
-                                control={control}
-                            />
+                            {/*<Controller*/}
+                            {/*    render={({field}) => (*/}
+                            {/*        <TextField*/}
+                            {/*            fullWidth*/}
+                            {/*            label={'BoardId'}*/}
+                            {/*            error={!!errors?.boardId}*/}
+                            {/*            helperText={*/}
+                            {/*                errors?.boardId && 'BoardId is required.'}*/}
+                            {/*            {...register('boardId', {required: true, maxLength: 20})}*/}
+                            {/*        />*/}
+                            {/*    )}*/}
+                            {/*    name={'boardId'}*/}
+                            {/*    control={control}*/}
+                            {/*/>*/}
                         </Box>
                     </Box>
                     <Box
