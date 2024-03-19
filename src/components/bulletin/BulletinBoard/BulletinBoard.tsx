@@ -27,7 +27,7 @@ export const BulletinBoard = (props) => {
     boardId
     return (
         <>
-            <AppBar position="fixed" color="default" sx={{ bottom: 'auto', top: '64px', width:'calc(100% * 2/3)' }}>
+            <AppBar color="default" sx={{ bottom: 'auto', top: '64px', width:'calc(100% * 2/3)' }}>
                 <Toolbar sx={{display: 'flex',p:2, alignItems:'center'}}>
                     <Box sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}, textAlign:'center'}}>
                         <Typography
@@ -50,7 +50,7 @@ export const BulletinBoard = (props) => {
                     <Divider/>
                 </Toolbar>
             </AppBar>
-            <Box sx={{display: 'flex', flexDirection: 'column', height: 'calc(100% - 97px)'}}>
+            <Box sx={{display: 'flex', flexDirection: 'column', height: 'calc(100% - 96px)', mt:12}}>
                 <List sx={{m:0,p:0}}>
                     {
                         postRdos.map(postRdo => (
