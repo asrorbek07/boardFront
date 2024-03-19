@@ -12,27 +12,23 @@ import {FaqPostItem} from "~/components/faq/FaqPost/FaqPostItem";
 import {useState} from "react";
 import {BulletinPostItem} from "~/components/bulletin/BulletinPost/BulletinPostItem";
 
-export const BulletinBoard = (
-    {
-        onNewPost,
-    }: {
-        onNewPost: () => void;
-    }
-) => {
-    const params = useParams<{boardId:string}>();
-    const {board,} = useBulletinBoard(params.boardId);
-    const {postRdos,} = useBulletinPostList(params.boardId);
+export const BulletinBoard = (props) => {
+        const [boardId, setBoardId] = useState(props.boardId)
+        const {board,} =useBulletinBoard(props.boardId);
+        const {postRdos,} = useBulletinPostList(props.boardId);
+
+
+    boardId
     return (
-        <Stack>
-            <Box sx={{ width: '30%', maxWidth: 360, bgcolor: 'background.paper' }}>
-              <h1>
+            <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                <Button onClick={props.onModifyBoard} >Modify Board</Button>
+                <h1>
                   {board?.title}
               </h1>
               <p>
                   {board?.description}
               </p>
 
-                <Button onClick={onNewPost} >New Bulletin Post</Button>
                 <nav aria-label="main mailbox folders">
                     <List>
                         {
@@ -41,9 +37,9 @@ export const BulletinBoard = (
                             ))
                         }
                     </List>
+                    <Button onClick={props.onNewPost} >New Post</Button>
                 </nav>
             </Box>
-        </Stack>
     )
 };
 

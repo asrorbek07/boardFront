@@ -1,14 +1,14 @@
-import {BulletinBoardCreate, NewFaqBoard} from '~/components';
+import {BulletinBoardModify} from '~/components';
 
 import { useNavigate } from 'react-router-dom';
 
 
-export const BulletinBoardCreatePage = () => {
+export const BulletinBoardModifyPage = () => {
   const navigate = useNavigate();
   const handleSaved = () => navigate(`..`);
   const handleCancel = () => navigate(`..`);
   return (
-    <BulletinBoardCreate onSaved={handleSaved} onCancel={handleCancel} />
+    <BulletinBoardModify onSaved={handleSaved} onCancel={handleCancel} />
   );
 };
 

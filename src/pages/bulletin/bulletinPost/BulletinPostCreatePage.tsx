@@ -1,15 +1,15 @@
 import { NewFaqPost } from '~/components';
 
 import { useNavigate } from 'react-router-dom';
-import {NewBulletinPost} from "~/components/bulletin/BulletinPost/NewBulletinPost";
+import {BulletinPostCreate} from "~/components/bulletin/BulletinPost/BulletinPostCreate";
 
 
-export const NewBulletinPostPage = () => {
+export const BulletinPostCreatePage = () => {
   const navigate = useNavigate();
   const handleSaved = () => navigate(`..`);
   const handleCancel = () => navigate(`..`);
   return (
-    <NewBulletinPost onSaved={handleSaved} onCancel={handleCancel} />
+    <BulletinPostCreate onSaved={handleSaved} onCancel={handleCancel} />
   );
 };
 

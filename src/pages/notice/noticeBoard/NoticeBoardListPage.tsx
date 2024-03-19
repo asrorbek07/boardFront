@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import React from "react";
 
 
-export const BulletinBoardListPage = () => {
+export const NoticeBoardListPage = () => {
     //
     const navigate = useNavigate();
-    const handleNewBulletinBoard = () => navigate(`new`);
+    const handleNewNoticeBoard = () => navigate(`new`);
 
     return (
-        <BoardList onNewBoard={handleNewBulletinBoard}/>
+        <BoardList onNewBoard={handleNewNoticeBoard}/>
     );
 };
 

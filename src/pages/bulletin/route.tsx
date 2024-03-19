@@ -3,8 +3,13 @@ import {Layout} from '~/layouts';
 import {IndexPage} from '~/pages/bulletin';
 import {BulletinBoardCreatePage} from "~/pages/bulletin/bulletinBoard/BulletinBoardCreatePage";
 import {BulletinBoardPage} from "~/pages/bulletin/bulletinBoard/BulletinBoardPage";
-import {NewBulletinPostPage} from "~/pages/bulletin/bulletinPost/NewBulletinPostPage";
+import {BulletinPostCreatePage} from "~/pages/bulletin/bulletinPost/BulletinPostCreatePage";
 import {BulletinBoardListPage} from "~/pages/bulletin/bulletinBoard/BulletinBoardListPage";
+import {BulletinPostPage} from "~/pages/bulletin/bulletinPost/BulletinPostPage";
+import {BulletinCommentCreatePage} from "~/pages/bulletin/bulletinComment/BulletinCommentCreatePage";
+import {BulletinBoardModifyPage} from "~/pages/bulletin/bulletinBoard/BulletinBoardModifyPage";
+import {BulletinReplyCreatePage} from "~/pages/bulletin/bulletinReply/BulletinReplyCreatePage";
+import {BulletinPostModifyPage} from "~/pages/bulletin/bulletinPost/BulletinPostModifyPage";
 
 export const route: RouteObject = {
     path: 'bulletin',
@@ -15,13 +20,10 @@ export const route: RouteObject = {
         withoutAuth: true,
     },
     children: [
-        {
-            index: true,
-            element: <IndexPage/>,
-        },
+
         {
             path: 'board',
-            element: <Outlet/>,
+            element: <IndexPage/>,
             handle: {
                 title: 'Bulletin Board',
             },
@@ -31,6 +33,14 @@ export const route: RouteObject = {
                     element: <BulletinBoardListPage/>,
                     handle: {
                         title: 'Bulletin Board List',
+                        type: "none",
+                    },
+                },
+                {
+                    path:'',
+                    element: <BulletinBoardPage/>,
+                    handle: {
+                        title: 'Bulletin Board and Post List',
                         type: "none",
                     },
                 },
@@ -50,25 +60,76 @@ export const route: RouteObject = {
                         title: 'Bulletin Board',
                         type: "none",
                     },
-                    children:[
-                        {
-                            path:"",
-                            element: <BulletinBoardPage/>,
-                            handle: {
-                                title: 'Bulletin Board and Post List',
-                                type: "none",
-                            },
-                        },
-                        {
-                         path:'post/new',
-                         element:<NewBulletinPostPage/>,
-                         handle:{
-                             title:'New Bulletin Post',
-                             type:'none',
-                         }
-                        },
-
-                    ],
+                    // children:[
+                    //     {
+                    //         path:"",
+                    //         element: <BulletinBoardPage/>,
+                    //         handle: {
+                    //             title: 'Bulletin Board and Post List',
+                    //             type: "none",
+                    //         },
+                    //     },
+                    //     {
+                    //      path:'post/new',
+                    //      element:<BulletinPostCreatePage/>,
+                    //      handle:{
+                    //          title:'New Bulletin Post',
+                    //          type:'none',
+                    //      }
+                    //
+                    //     },
+                    //     {
+                    //         path:'modify',
+                    //         element:<BulletinBoardModifyPage/>,
+                    //         handle:{
+                    //             title:'Modify Bulletin board',
+                    //             type:'none',
+                    //         }
+                    //     },
+                    //     {
+                    //         path:'post/:postId',
+                    //         element:<Outlet/>,
+                    //         handle:{
+                    //             title:'Bulletin Post',
+                    //             type:'none',
+                    //         },
+                    //         children:[
+                    //             {
+                    //                 path:'',
+                    //                 element:<BulletinPostPage/>,
+                    //                 handle:{
+                    //                     title:'Bulletin Post and Comment List',
+                    //                     type:'none',
+                    //                 }
+                    //             },
+                    //             {
+                    //                 path:'modify',
+                    //                 element:<BulletinPostModifyPage/>,
+                    //                 handle:{
+                    //                     title:'Modify Bulletin Comment',
+                    //                     type:'none',
+                    //                 }
+                    //             },
+                    //             {
+                    //                 path:'comment/new',
+                    //                 element:<BulletinCommentCreatePage/>,
+                    //                 handle:{
+                    //                     title:'New Bulletin Comment',
+                    //                     type:'none',
+                    //                 }
+                    //             },
+                    //             {
+                    //                 path:'comment/:commentId/reply/new',
+                    //                 element:<BulletinReplyCreatePage/>,
+                    //                 handle:{
+                    //                     title:'New Bulletin Comment',
+                    //                     type:'none',
+                    //                 }
+                    //             },
+                    //         ]
+                    //     },
+                    //
+                    // ],
                 },
             ],
         },

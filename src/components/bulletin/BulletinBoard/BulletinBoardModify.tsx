@@ -1,43 +1,48 @@
-import {Box, Button, Card, TextField, Typography,} from '@mui/material';
-import {LoadingButton} from '@mui/lab';
+import React, {useState} from 'react';
+import {Box, Button, Card, TextField, Typography} from "@mui/material";
+import {Controller, useForm} from "react-hook-form";
+import {ModifyBulletinBoardCommand} from "~/apis";
+import {NameValueList} from "@vizendjs/accent";
+import {useBulletinBoard, useBulletinBoardModify} from "~/components";
+import {useParams} from "react-router-dom";
+import {useSnackbar} from "notistack";
+import {LoadingButton} from "@mui/lab";
+import {Board, BoardCdo, BulletinBoardCdo} from "~/models";
 
-import {BulletinBoardCdo, FaqBoardCdo} from '~/models';
-import {useSnackbar} from 'notistack';
-
-import {Controller, useForm} from 'react-hook-form';
-import {useBulletinBoardRegister} from "~/components";
-
-export const NewBulletinBoard = ({
-                                onSaved,
-                                onCancel,
-                            }: {
+export const BulletinBoardModify = ({
+                                        onSaved,
+                                        onCancel,
+                                    }: {
     onSaved?: () => void;
     onCancel?: () => void;
 }) => {
     const {enqueueSnackbar} = useSnackbar();
+    const params = useParams<{boardId:string}>();
+    const {board} = useBulletinBoard(params.boardId);
     const {
-        mutation: {registerBulletinBoard},
-    } = useBulletinBoardRegister();
+        mutation: {modifyBulletinBoard},
+    } = useBulletinBoardModify();
+
+    const [nameValueList, setNameValueList] = useState<NameValueList>({nameValues: []});
+
     const {
         register,
         handleSubmit,
         control,
         formState: {errors},
-    } = useForm<Partial<BulletinBoardCdo>>({
-        defaultValues: {
-            title: '',
-            description: '',
-        },
+        setValue,
+    } = useForm<Partial<BoardCdo>>({
+        defaultValues:board,
     });
 
-    const handleMutate = async (data) => {
+    const handleMutate = async () => {
         const onSuccess = async () => {
-            const response = await registerBulletinBoard
+            const response = await modifyBulletinBoard
                 .mutateAsync({
-                    title: data.title,
-                    description: data.description,
+                    nameValueList,
+                    boardId:params.boardId
                 }, {
-                    onSuccess: () => enqueueSnackbar("Bulletin Board has been registered successfully", {variant: 'success'}),
+                    onSuccess: () => enqueueSnackbar("Bulletin Board has been modified successfully", {variant: 'success'}),
                 })
                 .catch((e) => {
                     console.log(e)
@@ -49,6 +54,17 @@ export const NewBulletinBoard = ({
     };
 
     const handleCancel = () => onCancel && onCancel();
+
+    const handleInputChange = (name: string, value: string) => {
+        const existingIndex = nameValueList.nameValues.findIndex((nv) => nv.name === name);
+        if (existingIndex !== -1) {
+            const updatedNameValues = [...nameValueList.nameValues];
+            updatedNameValues[existingIndex].value = value;
+            setNameValueList({nameValues: updatedNameValues});
+        } else {
+            setNameValueList({nameValues: [...nameValueList.nameValues, {name, value}]});
+        }
+    };
 
     return (
         <>
@@ -62,7 +78,7 @@ export const NewBulletinBoard = ({
                     }}
                 >
                     <Typography>
-                        New BulletinBoard
+                        Modify Bulletin Board
                     </Typography>
                     <Button variant="text" color="primary" sx={{display: 'flex', gap: '8px'}} onClick={handleCancel}>
                         Back
@@ -87,20 +103,24 @@ export const NewBulletinBoard = ({
                                 padding: '40px 120px',
                                 paddingRight: 0,
                                 flexGrow: 1,
+
                             }}
                         >
+
                             <Controller
                                 render={({field}) => (
                                     <TextField
                                         fullWidth
                                         label={'Title'}
                                         error={!!errors?.title}
-                                        helperText={
-                                            errors?.title && 'Title is required.'}
-                                        {...register('title', {required: true, maxLength: 20})}
+                                        helperText={errors?.title && 'Title is required.'}
+                                        {...register(`title`, {required: false, maxLength: 50})}
+                                        onChange={(e) => {
+                                            handleInputChange('title', e.target.value);
+                                        }}
                                     />
                                 )}
-                                name={'title'}
+                                name='title'
                                 control={control}
                             />
                             <Controller
@@ -109,12 +129,14 @@ export const NewBulletinBoard = ({
                                         fullWidth
                                         label={'Description'}
                                         error={!!errors?.description}
-                                        helperText={
-                                            errors?.description && 'Description is required.'}
-                                        {...register('description', {required: true, maxLength: 20})}
+                                        helperText={errors?.description && 'Description is required.'}
+                                        {...register(`description`, {required: false, maxLength: 200})}
+                                        onChange={(e) => {
+                                            handleInputChange('description', e.target.value);
+                                        }}
                                     />
                                 )}
-                                name={'description'}
+                                name='description'
                                 control={control}
                             />
                         </Box>
@@ -131,14 +153,16 @@ export const NewBulletinBoard = ({
                         <Button variant="outlined" color="primary" onClick={handleCancel}>
                             Cancel
                         </Button>
-                        <LoadingButton loading={registerBulletinBoard.isLoading} variant="contained" color="primary"
+                        <LoadingButton loading={modifyBulletinBoard.isLoading} variant="contained" color="primary"
                                        type={'submit'}>
-                            Add
+                            Modify
                         </LoadingButton>
                     </Box>
                 </Card>
+
+
+
             </form>
         </>
     );
 };
-

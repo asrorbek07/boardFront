@@ -1,10 +1,9 @@
 import * as React from 'react';
-import {BulletinBoardItem, FaqBoardItem, useFaqBoardList,} from "~/components";
+import {FaqBoardItem, useFaqBoardList, } from "~/components";
 import {Button, Stack} from "@mui/material";
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
-import {useBulletinBoardList} from "~/components/bulletin/hooks/useBulletinBoardList";
-export const BulletinBoardList = (
+export const NoticeBoardList = (
     {
         onNewBoard,
     }: {
@@ -12,16 +11,17 @@ export const BulletinBoardList = (
     }
 ) => {
 
-    const { boards } =  useBulletinBoardList();
+    const { boards } =  useFaqBoardList();
+    console.log("Check")
     return (
         <Stack>
             <Box sx={{ width: '30%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                <Button onClick={onNewBoard}>New Bulletin Board</Button>
+                <Button onClick={onNewBoard}>New FAQ Boards</Button>
                 <nav aria-label="main mailbox folders">
                     <List>
                 {
                     boards.map(board => (
-                        <BulletinBoardItem key={board.id} board={board}/>
+                        <FaqBoardItem key={board.id} board={board}/>
                     ))
                 }
                     </List>

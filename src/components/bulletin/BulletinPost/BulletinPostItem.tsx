@@ -7,11 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ListItem from "@mui/material/ListItem";
 import * as React from "react";
 import {useSnackbar} from "notistack";
-import {useBulletinPostRemove, useFaqBoardRemove} from "~/components";
-import {useLocation, useNavigate} from "react-router-dom";
-import {FaqPostRdo} from "~/models";
-import {useFaqPostRemove} from "~/components/faq/hooks/useFaqPostRemove";
-import {useReducer} from "react";
+import {useBulletinPostRemove} from "~/components";
 
 export const BulletinPostItem = ({postRdo})=>{
 
@@ -37,7 +33,7 @@ export const BulletinPostItem = ({postRdo})=>{
     return(
         <>
             <ListItem key={postRdo.post.id} disablePadding>
-                <ListItemButton sx={{ height: '100%'}}  component="a">
+                <ListItemButton sx={{ height: '100%'}}  component="a" href={"/board/bulletin/board/"+postRdo.post.boardId+"/post/"+postRdo.post.id}>
                     <ListItemIcon>
                         <QuizIcon />
                     </ListItemIcon>

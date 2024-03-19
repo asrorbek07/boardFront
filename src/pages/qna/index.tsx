@@ -1,11 +1,10 @@
 import {useEffect} from 'react';
-import {Outlet, useNavigate} from 'react-router-dom';
-import {Layout} from "~/layouts";
+import {useNavigate} from 'react-router-dom';
 
 export const IndexPage = () => {
 	const navigate = useNavigate();
 	useEffect(() => {
-		navigate('/bulletin/board');
+		navigate('/qna/board');
 	}, []);
 	return null;
 };

@@ -1,2 +1,4 @@
 export * from './BulletinPostItem'
-export * from './NewBulletinPost'
+export * from './BulletinPostCreate'
+export * from './BulletinPost'
+export * from './BulletinPostModify'

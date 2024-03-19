@@ -10,8 +10,10 @@ import {useSnackbar} from "notistack";
 import {useFaqBoardRemove} from "~/components";
 import {useNavigate} from "react-router-dom";
 import {useBulletinBoardRemove} from "~/components/bulletin/hooks/useBulletinBoardRemove";
+import {Board} from "~/models";
+import {DashboardSharp} from "@mui/icons-material";
 
-export const BulletinBoardItem = ({board})=>{
+export const BulletinBoardItem = ({board, onClick} : {board: Board, onClick: (boardId:string) => void})=>{
     const {enqueueSnackbar} = useSnackbar();
     const {mutation: {removeBulletinBoard},} = useBulletinBoardRemove();
     const navigate = useNavigate();
@@ -30,22 +32,19 @@ export const BulletinBoardItem = ({board})=>{
                 });
         }
         if (confirm('Are you sure want to remove?')) await onSuccess()
-        navigate('../')
     };
 
     return(
-        <>
             <ListItem key={board.id} disablePadding>
-                <ListItemButton  component="a" href={"/board/bulletin/board/"+board.id}>
+                <ListItemButton  component="a" onClick={() => onClick(board.id)}>
                     <ListItemIcon>
-                        <QuizIcon />
+                        <DashboardSharp />
                     </ListItemIcon>
                     <ListItemText primary={board.title} />
                 </ListItemButton>
-                <Button onClick={()=>onRemove(board.id)}>
-                    <DeleteIcon />
+                <Button sx={{m:0,p:1, display:'box', height:'48px'}} onClick={()=>onRemove(board.id)}>
+                    <DeleteIcon/>
                 </Button>
             </ListItem>
-        </>
     )
 }

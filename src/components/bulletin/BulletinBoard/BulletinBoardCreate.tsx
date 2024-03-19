@@ -1,55 +1,51 @@
-import {
-    Box,
-    Button,
-    Card,
-    TextField,
-    Typography,
-} from '@mui/material';
-import {FaqPostCdo} from '~/models';
+import {Box, Button, Card, TextField, Typography,} from '@mui/material';
+import {LoadingButton} from '@mui/lab';
+
+import {BulletinBoardCdo, FaqBoardCdo} from '~/models';
 import {useSnackbar} from 'notistack';
 
 import {Controller, useForm} from 'react-hook-form';
-import {useBulletinPostRegister,} from '../hooks';
-import {useParams} from "react-router-dom";
+import {useBulletinBoardRegister} from "~/components";
 
-
-export const NewBulletinPost = ({
-                               onSaved,
-                               onCancel,
-                           }: {
+export const BulletinBoardCreate = ({
+                                onSaved,
+                                onCancel,
+                            }: {
     onSaved?: () => void;
     onCancel?: () => void;
 }) => {
     const {enqueueSnackbar} = useSnackbar();
-    const params = useParams<{boardId:string}>();
-    const {mutation: {registerBulletinPost},} = useBulletinPostRegister();
+    const {
+        mutation: {registerBulletinBoard},
+    } = useBulletinBoardRegister();
     const {
         register,
         handleSubmit,
         control,
         formState: {errors},
-    } = useForm<Partial<FaqPostCdo>>({
+    } = useForm<Partial<BulletinBoardCdo>>({
         defaultValues: {
             title: '',
-            content: '',
-            boardId: params.boardId,
+            description: '',
         },
     });
 
     const handleMutate = async (data) => {
         const onSuccess = async () => {
-            const response = await registerBulletinPost
+            const response = await registerBulletinBoard
                 .mutateAsync({
                     title: data.title,
-                    content: data.content,
-                    boardId: data.boardId,
+                    description: data.description,
+                }, {
+                    onSuccess: () => enqueueSnackbar("Bulletin Board has been registered successfully", {variant: 'success'}),
                 })
                 .catch((e) => {
+                    console.log(e)
                     enqueueSnackbar(e.message, {variant: 'error'});
                 });
             onSaved && onSaved();
         }
-        if (confirm('Are you sure want to save?')) await onSuccess();
+        if (confirm('Are you sure want to save?')) await onSuccess()
     };
 
     const handleCancel = () => onCancel && onCancel();
@@ -66,7 +62,7 @@ export const NewBulletinPost = ({
                     }}
                 >
                     <Typography>
-                        New BulletinPost
+                        New BulletinBoard
                     </Typography>
                     <Button variant="text" color="primary" sx={{display: 'flex', gap: '8px'}} onClick={handleCancel}>
                         Back
@@ -111,30 +107,16 @@ export const NewBulletinPost = ({
                                 render={({field}) => (
                                     <TextField
                                         fullWidth
-                                        label={'Content'}
-                                        error={!!errors?.content}
+                                        label={'Description'}
+                                        error={!!errors?.description}
                                         helperText={
-                                            errors?.content && 'Content is required.'}
-                                        {...register('content', {required: true, maxLength: 20})}
+                                            errors?.description && 'Description is required.'}
+                                        {...register('description', {required: true, maxLength: 20})}
                                     />
                                 )}
-                                name={'content'}
+                                name={'description'}
                                 control={control}
                             />
-                            {/*<Controller*/}
-                            {/*    render={({field}) => (*/}
-                            {/*        <TextField*/}
-                            {/*            fullWidth*/}
-                            {/*            label={'BoardId'}*/}
-                            {/*            error={!!errors?.boardId}*/}
-                            {/*            helperText={*/}
-                            {/*                errors?.boardId && 'BoardId is required.'}*/}
-                            {/*            {...register('boardId', {required: true, maxLength: 20})}*/}
-                            {/*        />*/}
-                            {/*    )}*/}
-                            {/*    name={'boardId'}*/}
-                            {/*    control={control}*/}
-                            {/*/>*/}
                         </Box>
                     </Box>
                     <Box
@@ -149,9 +131,10 @@ export const NewBulletinPost = ({
                         <Button variant="outlined" color="primary" onClick={handleCancel}>
                             Cancel
                         </Button>
-                        <Button variant="contained" color="primary" type={'submit'}>
+                        <LoadingButton loading={registerBulletinBoard.isLoading} variant="contained" color="primary"
+                                       type={'submit'}>
                             Add
-                        </Button>
+                        </LoadingButton>
                     </Box>
                 </Card>
             </form>

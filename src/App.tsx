@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import {useEffect, useMemo} from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { initInterceptors, useAuth, useDock } from '@vizendjs/dock-ui';
 import { browserRouter } from './pages/router';
@@ -8,6 +8,9 @@ import { CommandResponse, QueryResponse } from '@vizendjs/accent';
 
 
 const App = () => {
+    useEffect(() => {
+        document.body.style.margin = '0';
+    }, []);
   const router = useMemo(() => browserRouter, []);
   const dock = useDock();
   const auth = useAuth();
