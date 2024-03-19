@@ -30,6 +30,7 @@ export const BulletinBoardItem = ({board, onClick} : {board: Board, onClick: (bo
                     console.log(e)
                     enqueueSnackbar(e.message, {variant: 'error'});
                 });
+            navigate('..')
         }
         if (confirm('Are you sure want to remove?')) await onSuccess()
     };

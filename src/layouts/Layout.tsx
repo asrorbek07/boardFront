@@ -8,19 +8,19 @@ export const Layout = () => {
     const navItems = [
         {
             title: 'Bulletin',
-            path: '/bulletin/board',
+            path: '/bulletin',
         },
         {
             title: 'FAQ',
-            path: '/faq/board',
+            path: '/faq',
         },
         {
             title: 'Notice',
-            path: '/notice/board',
+            path: '/notice',
         },
         {
             title: 'Q&A',
-            path: '/qna/board',
+            path: '/qna',
         }
     ];
 

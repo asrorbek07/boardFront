@@ -9,8 +9,6 @@ export const BulletinBoardListPage = () => {
     const navigate = useNavigate();
     const handleNewBulletinBoard = () => navigate(`new`);
 
-    return (
-        <BoardList onNewBoard={handleNewBulletinBoard}/>
-    );
+    return null;
 };
 

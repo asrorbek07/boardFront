@@ -5,7 +5,7 @@ import {Layout} from "~/layouts";
 export const IndexPage = () => {
 	const navigate = useNavigate();
 	useEffect(() => {
-		navigate('/bulletin/board');
+		navigate('/bulletin/');
 	}, []);
 	return null;
 };
