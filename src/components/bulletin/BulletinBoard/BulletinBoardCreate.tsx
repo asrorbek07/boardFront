@@ -5,7 +5,7 @@ import { BulletinBoardCdo, FaqBoardCdo } from "~/models";
 import { useSnackbar } from "notistack";
 
 import { Controller, useForm } from "react-hook-form";
-import { useBulletinBoardRegister } from "~/components";
+import { useBulletinBoardList, useBulletinBoardRegister } from "~/components";
 import CloseIcon from "@mui/icons-material/Close";
 
 export const BulletinBoardCreate = ({
@@ -14,6 +14,7 @@ export const BulletinBoardCreate = ({
   handleClose?: () => void;
 }) => {
   const { enqueueSnackbar } = useSnackbar();
+  const {refetchBoards} = useBulletinBoardList()
   const {
     mutation: { registerBulletinBoard },
   } = useBulletinBoardRegister();
@@ -49,6 +50,7 @@ export const BulletinBoardCreate = ({
           console.log(e);
           enqueueSnackbar(e.message, { variant: "error" });
         });
+         refetchBoards() 
         handleClose && handleClose()
 
     };

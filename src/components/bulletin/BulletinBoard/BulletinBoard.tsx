@@ -17,10 +17,8 @@ import { Board, FaqPostRdo } from "~/models";
 import { useFaqPostList } from "~/components/faq/hooks/useFaqPostList";
 import List from "@mui/material/List";
 import {
-  BulletinBoardCreate,
   BulletinPostCreate,
   BulletinPostModify,
-  FaqBoardItem,
   useBulletinBoard,
   useBulletinPostList,
 } from "~/components";
@@ -36,8 +34,8 @@ function MenuIcon() {
 export const BulletinBoard = (props) => {
   const handleClose = () => setOpen(false);
   const [open, setOpen] = React.useState<boolean>(false);
-  const { board } = useBulletinBoard(props.boardId);
-  const { postRdos } = useBulletinPostList(props.boardId);
+  const { board, refetchBoard } = useBulletinBoard(props.boardId);
+  const { postRdos, refetchPostRdos } = useBulletinPostList(props.boardId);
 
   return (
     <>
@@ -55,8 +53,8 @@ export const BulletinBoard = (props) => {
         >
           <Box
             sx={{
-              display: { xs: "none", sm: "flex" },
-              textAlign: "left",
+              display: { xs: "none", sm: "block" },
+              textAlign: "center",
               gap: "20px",
               width: "100%",
             }}
@@ -68,12 +66,10 @@ export const BulletinBoard = (props) => {
               {board?.description}
             </Typography>
           </Box>
-          <Box>
-            <Button onClick={() => {setOpen(true)}} sx={{ m: 0, height: "48px" }}>
-              <p>Modify</p>
-            </Button>
-          </Box>
           <Divider />
+          <Box>
+            <Button onClick={() => setOpen(true)} color="primary">Add</Button>
+          </Box>
         </Toolbar>
       </AppBar>
       <Box
@@ -92,11 +88,10 @@ export const BulletinBoard = (props) => {
           }}
         >
           {postRdos.map((postRdo) => (
-            <BulletinPostItem key={postRdo.post.id} postRdo={postRdo} />
+            <BulletinPostItem refetchBoard={refetchBoard} refetchPostRdos={refetchPostRdos} key={postRdo.post.id} postRdo={postRdo} />
           ))}
         </List>
       </Box>
-      <BulletinPostCreate postId={props.boardId} />
 
       <Modal
         aria-labelledby="modal-title"
@@ -123,7 +118,7 @@ export const BulletinBoard = (props) => {
             boxShadow: "lg",
           }}
         >
-          <BulletinPostModify postId={props.boardId} handleClose={handleClose} />
+          <BulletinPostCreate refetchBoard={refetchBoard} refetchPostRdos={refetchPostRdos} boardId={props.boardId} handleClose={handleClose} />
         </Sheet>
       </Modal>
     </>
