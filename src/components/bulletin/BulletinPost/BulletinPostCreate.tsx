@@ -1,5 +1,5 @@
 import { Box, Button, Card, TextField, Typography } from "@mui/material";
-import { BulletinPostCdo, FaqPostCdo } from "~/models";
+import { BulletinPostCdo} from "~/models";
 import { useSnackbar } from "notistack";
 
 import { Controller, useForm } from "react-hook-form";

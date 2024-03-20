@@ -1,7 +1,3 @@
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import QuizIcon from "@mui/icons-material/Quiz";
-import ListItemText from "@mui/material/ListItemText";
 import {
   Button,
   Card,
@@ -17,13 +13,15 @@ import { useSnackbar } from "notistack";
 import { useBulletinPostRemove } from "~/components";
 import ThumbUpOffAlt from "@mui/icons-material/ThumbUpOffAlt";
 import Visibility from "@mui/icons-material/Visibility";
-import { Post, ReadCheck, ThumbUpRecord } from "~/models";
+import {BulletinPostRdo, Post, ReadCheck, ThumbUpRecord} from "~/models";
 
 export const BulletinPostItem = ({
   postRdo,
   refetchPostRdos,
-  refetchBoard,
-}: any) => {
+}: {
+  postRdo:BulletinPostRdo;
+  refetchPostRdos:()=>void;
+}) => {
   const { enqueueSnackbar } = useSnackbar();
   const {
     mutation: { removeBulletinPost },
@@ -51,7 +49,6 @@ export const BulletinPostItem = ({
           enqueueSnackbar(e.message, { variant: "error" });
         });
       refetchPostRdos();
-      refetchBoard();
     };
     if (confirm("Are you sure want to remove?")) await onSuccess();
   };
@@ -59,9 +56,9 @@ export const BulletinPostItem = ({
   return (
     <>
       <ListItem
-        key={postRdo.post.id}
+        key={post.id}
         disablePadding
-        sx={{ width: "70%", my: 4, mx: "auto" }}
+        sx={{ width: "80%", my: 4, mx: "auto" }}
       >
         <Card sx={{ width: "100%", p: 2 }}>
           <CardContent>
@@ -84,7 +81,7 @@ export const BulletinPostItem = ({
             <Button size="small" onClick={() => onRemove(post.id)}>
               <DeleteIcon sx={{ height: "100%" }} />
             </Button>
-            <Button size="small">Learn More</Button>
+            <Button size="small">Comments</Button>
           </CardActions>
         </Card>
       </ListItem>

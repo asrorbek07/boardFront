@@ -10,26 +10,14 @@ import {
   Typography,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-
-import { useNavigate, useParams } from "react-router-dom";
-import { useFaqBoard } from "~/components/faq/hooks/useFaqBoard";
-import { Board, FaqPostRdo } from "~/models";
-import { useFaqPostList } from "~/components/faq/hooks/useFaqPostList";
 import List from "@mui/material/List";
 import {
   BulletinPostCreate,
-  BulletinPostModify,
   useBulletinBoard,
   useBulletinPostList,
 } from "~/components";
-import { FaqPostItem } from "~/components/faq/FaqPost/FaqPostItem";
-import { useState } from "react";
 import { BulletinPostItem } from "~/components/bulletin/BulletinPost/BulletinPostItem";
 import { Sheet } from "@mui/joy";
-
-function MenuIcon() {
-  return null;
-}
 
 export const BulletinPostList = ({boardId}:{boardId:string;}) => {
   const handleClose = () => setOpen(false);
@@ -83,7 +71,7 @@ export const BulletinPostList = ({boardId}:{boardId:string;}) => {
           }}
         >
           {postRdos.map((postRdo) => (
-            <BulletinPostItem refetchBoard={refetchBoard} refetchPostRdos={refetchPostRdos} key={postRdo.post.id} postRdo={postRdo} />
+            <BulletinPostItem key={postRdo.post.id} postRdo={postRdo} refetchPostRdos={refetchPostRdos} />
           ))}
         </List>
 
