@@ -1,8 +1,6 @@
 import { Outlet, RouteObject } from "react-router-dom";
 import { Layout } from "~/layouts";
-import { IndexPage } from "~/pages/bulletin";
-import { BulletinBoardModifyPage } from "~/pages/bulletin/bulletinBoard/BulletinBoardModifyPage";
-import { BulletinPostCreatePage } from "~/pages/bulletin/bulletinPost/BulletinPostCreatePage";
+import { IndexPage } from "~/pages/bulletin/IndexPage";
 
 export const route: RouteObject = {
   path: "bulletin",
@@ -18,23 +16,6 @@ export const route: RouteObject = {
       element: <IndexPage />,
       handle: {
         title: "Bulletin Board",
-      },
-    },
-    {
-      path: ":boardId/post/new",
-      element: <BulletinPostCreatePage />,
-      handle: {
-        title: "New Bulletin Post",
-        type: "none",
-      },
-    },
-    {
-      path: ":boardId/modify",
-
-      element: <BulletinBoardModifyPage />,
-      handle: {
-        title: "Bulletin Board Modify",
-        type: "none",
       },
     },
   ],

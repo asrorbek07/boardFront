@@ -19,22 +19,23 @@ import { Board } from "~/models";
 import { DashboardSharp } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
 import { Sheet } from "@mui/joy";
-export const BulletinBoardItem = ({
-  board,
-  onClick,
-}: {
-  board: Board;
-  onClick: (boardId: string) => void;
-}) => {
+export const BulletinBoardItem = (
+    {
+        board,
+        onClick,
+        refetchBoards,
+    }: {
+        board: Board;
+        onClick: (boardId: string) => void;
+        refetchBoards:()=>void;
+    }
+) => {
   const { enqueueSnackbar } = useSnackbar();
   const {
     mutation: { removeBulletinBoard },
   } = useBulletinBoardRemove();
-  const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const handleClose = () => setOpen(false);
-  const { refetchBoards } = useBulletinBoardList();
-
   const onRemove = async (boardId: string) => {
     const onSuccess = async () => {
       const response = await removeBulletinBoard
@@ -83,8 +84,8 @@ export const BulletinBoardItem = ({
       </ListItem>
 
       <Modal
-        aria-labelledby="modal-title"
-        aria-describedby="modal-desc"
+        aria-labelledby="Modify Board"
+        aria-describedby="modify board"
         open={open}
         onClose={handleClose}
         style={{
@@ -107,11 +108,7 @@ export const BulletinBoardItem = ({
             boxShadow: "lg",
           }}
         >
-          <BulletinBoardModify
-            boardItem={board}
-            boardId={board.id}
-            handleClose={handleClose}
-          />
+          <BulletinBoardModify board={board} refetchBoards={refetchBoards} handleClose={handleClose}/>
         </Sheet>
       </Modal>
     </>

@@ -31,11 +31,11 @@ function MenuIcon() {
   return null;
 }
 
-export const BulletinBoard = (props) => {
+export const BulletinPostList = ({boardId}:{boardId:string;}) => {
   const handleClose = () => setOpen(false);
   const [open, setOpen] = React.useState<boolean>(false);
-  const { board, refetchBoard } = useBulletinBoard(props.boardId);
-  const { postRdos, refetchPostRdos } = useBulletinPostList(props.boardId);
+  const { board, refetchBoard } = useBulletinBoard(boardId);
+  const { postRdos, refetchPostRdos } = useBulletinPostList(boardId);
 
   return (
     <>
@@ -72,26 +72,21 @@ export const BulletinBoard = (props) => {
           </Box>
         </Toolbar>
       </AppBar>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          mt: 8,
-        }}
-      >
+
         <List
           sx={{
-            m: 0,
-            p: 0,
-            overflowY: "scroll",
-            height: "calc(100vh - 202px)",
+              mt: 8,
+              p: 1,
+              overflowY: "scroll",
+              height: "calc(100vh - 144px)",
+              width:'calc(100% - 16px)',
           }}
         >
           {postRdos.map((postRdo) => (
             <BulletinPostItem refetchBoard={refetchBoard} refetchPostRdos={refetchPostRdos} key={postRdo.post.id} postRdo={postRdo} />
           ))}
         </List>
-      </Box>
+
 
       <Modal
         aria-labelledby="modal-title"
@@ -118,7 +113,7 @@ export const BulletinBoard = (props) => {
             boxShadow: "lg",
           }}
         >
-          <BulletinPostCreate refetchBoard={refetchBoard} refetchPostRdos={refetchPostRdos} boardId={props.boardId} handleClose={handleClose} />
+          <BulletinPostCreate boardId={boardId} refetchPostRdos={refetchPostRdos} handleClose={handleClose} />
         </Sheet>
       </Modal>
     </>

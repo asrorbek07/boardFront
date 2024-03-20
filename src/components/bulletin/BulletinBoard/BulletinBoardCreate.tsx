@@ -1,20 +1,23 @@
 import { Box, Button, Card, TextField, Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 
-import { BulletinBoardCdo, FaqBoardCdo } from "~/models";
+import { BulletinBoardCdo} from "~/models";
 import { useSnackbar } from "notistack";
 
 import { Controller, useForm } from "react-hook-form";
-import { useBulletinBoardList, useBulletinBoardRegister } from "~/components";
+import { useBulletinBoardRegister } from "~/components";
 import CloseIcon from "@mui/icons-material/Close";
 
-export const BulletinBoardCreate = ({
-  handleClose,
-}: {
-  handleClose?: () => void;
-}) => {
+export const BulletinBoardCreate = (
+    {
+        handleClose,
+        refetchBoards,
+    }: {
+        handleClose?: () => void;
+        refetchBoards:()=> void;
+    }
+) => {
   const { enqueueSnackbar } = useSnackbar();
-  const {refetchBoards} = useBulletinBoardList()
   const {
     mutation: { registerBulletinBoard },
   } = useBulletinBoardRegister();
@@ -50,7 +53,7 @@ export const BulletinBoardCreate = ({
           console.log(e);
           enqueueSnackbar(e.message, { variant: "error" });
         });
-         refetchBoards() 
+         refetchBoards()
         handleClose && handleClose()
 
     };
@@ -69,7 +72,7 @@ export const BulletinBoardCreate = ({
             justifyContent: "space-between",
           }}
         >
-          <Typography>New BulletinBoard</Typography>
+          <Typography>New Bulletin Board</Typography>
           <Button
             variant="text"
             color="primary"
@@ -90,7 +93,7 @@ export const BulletinBoardCreate = ({
                     label={"Title"}
                     error={!!errors?.title}
                     helperText={errors?.title && "Title is required."}
-                    {...register("title", { required: true, maxLength: 20 })}
+                    {...register("title", { required: true, maxLength: 50 })}
                   />
                 )}
                 name={"title"}
@@ -107,7 +110,7 @@ export const BulletinBoardCreate = ({
                     }
                     {...register("description", {
                       required: true,
-                      maxLength: 50,
+                      maxLength: 200,
                     })}
                   />
                 )}
@@ -134,7 +137,7 @@ export const BulletinBoardCreate = ({
               color="primary"
               type={"submit"}
             >
-              Add
+              Save
             </LoadingButton>
           </Box>
         </Card>

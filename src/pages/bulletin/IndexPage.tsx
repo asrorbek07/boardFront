@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet} from "react-router-dom";
 import { Box } from "@mui/material";
 import { BulletinMain } from "~/components/bulletin/BulletinMain";
-import { BulletinBoardPage } from "~/pages/bulletin/bulletinBoard/BulletinBoardPage";
 
 export const IndexPage = () => {
   return (

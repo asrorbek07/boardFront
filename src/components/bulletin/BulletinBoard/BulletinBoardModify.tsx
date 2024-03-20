@@ -1,23 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import { Box, Button, Card, TextField, Typography } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { NameValueList } from "@vizendjs/accent";
-import { useBulletinBoard, useBulletinBoardList, useBulletinBoardModify } from "~/components";
+import { useBulletinBoardModify } from "~/components";
 import { useSnackbar } from "notistack";
 import { LoadingButton } from "@mui/lab";
-import { Board, BoardCdo, BulletinBoardCdo } from "~/models";
+import { Board, BoardCdo} from "~/models";
 
-export const BulletinBoardModify = ({
-  boardId,
-  handleClose,
-  boardItem,
-}: {
-  boardId: any;
-  handleClose: () => void;
-  boardItem: Board;
-}) => {
+export const BulletinBoardModify = (
+    {
+        board,
+        refetchBoards,
+        handleClose,
+    }: {
+        board:Board;
+        refetchBoards:()=>void;
+        handleClose: () => void;
+    }
+) => {
   const { enqueueSnackbar } = useSnackbar();
-  const {refetchBoards} = useBulletinBoardList()
   const {
     mutation: { modifyBulletinBoard },
   } = useBulletinBoardModify();
@@ -33,7 +34,7 @@ export const BulletinBoardModify = ({
     formState: { errors },
     setValue,
   } = useForm<Partial<BoardCdo>>({
-    defaultValues: boardItem,
+    defaultValues: board,
   });
 
   const handleMutate = async () => {
@@ -42,7 +43,7 @@ export const BulletinBoardModify = ({
         .mutateAsync(
           {
             nameValueList,
-            boardId: boardId,
+            boardId: board.id,
           },
           {
             onSuccess: () =>
@@ -160,7 +161,7 @@ export const BulletinBoardModify = ({
               color="primary"
               type={"submit"}
             >
-              Modify
+              Save
             </LoadingButton>
           </Box>
         </Card>

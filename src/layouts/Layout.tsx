@@ -28,7 +28,7 @@ export const Layout = () => {
         <AppBar component="nav">
             <Toolbar>
                 <Typography
-                    variant="h5"
+                    variant="h4"
                     component="div"
                     sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
                 >

@@ -132,31 +132,11 @@ export const BulletinPostModify = ({
                     // helperText={errors?.nameValueList && 'Description is required.'}
                     {...register(`nameValueList.nameValues.${1}.${"content"}`, {
                       required: false,
-                      maxLength: 2000,
+                      maxLength: 500,
                     })}
                     onChange={(e) => {
                       // setValue('description', e.target.value);
                       handleInputChange("content", e.target.value);
-                    }}
-                  />
-                )}
-                name="nameValueList.nameValues"
-                control={control}
-              />
-              <Controller
-                render={({ field }) => (
-                  <TextField
-                    fullWidth
-                    label={"Display Name"}
-                    error={!!errors?.nameValueList?.nameValues}
-                    // helperText={errors?.nameValueList && 'Description is required.'}
-                    {...register(
-                      `nameValueList.nameValues.${2}.${"displayName"}`,
-                      { required: false, maxLength: 50 }
-                    )}
-                    onChange={(e) => {
-                      // setValue('description', e.target.value);
-                      handleInputChange("displayName", e.target.value);
                     }}
                   />
                 )}

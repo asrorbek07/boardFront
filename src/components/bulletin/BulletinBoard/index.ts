@@ -1,5 +1,4 @@
-export * from '../BoardList';
+export * from './BulletinBoardList';
 export * from './BulletinBoardItem';
-export * from './BulletinBoard';
 export * from './BulletinBoardCreate';
 export * from './BulletinBoardModify';

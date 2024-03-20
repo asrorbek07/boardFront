@@ -1,20 +1,18 @@
 import * as React from "react";
-import { BulletinBoardCreate, BulletinBoardItem } from "~/components";
+import {BulletinBoardCreate, BulletinBoardItem, useBulletinBoardList} from "~/components";
 import List from "@mui/material/List";
 import { Board } from "~/models";
 import { AppBar, Button, Divider, Toolbar, Typography } from "@mui/material";
 import Sheet from "@mui/joy/Sheet";
 import { Modal } from "@mui/base";
-export const BoardList = ({
-  boards,
+export const BulletinBoardList = ({
   onClickBoard,
 }: {
-  boards: Board[];
   onClickBoard: (boardId) => void;
 }) => {
-  const handleClose = () => setOpen(false);
+    const { boards,refetchBoards } = useBulletinBoardList();
   const [open, setOpen] = React.useState<boolean>(false);
-
+  const handleClose = () => setOpen(false);
   return (
     <>
       <AppBar
@@ -23,7 +21,7 @@ export const BoardList = ({
       >
         <Toolbar sx={{ display: "flex", alignItems: "center" }}>
           <Typography
-            variant="h6"
+            variant="h5"
             component="div"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
@@ -43,22 +41,18 @@ export const BoardList = ({
       <List
         sx={{
           mt: 8,
-          pt: 1,
+          p: 1,
           overflowY: "scroll",
-          height: "calc(100vh - 145px)",
+          height: "calc(100vh - 144px)",
         }}
       >
         {boards.map((board) => (
-          <BulletinBoardItem
-            key={board.id}
-            board={board}
-            onClick={onClickBoard}
-          />
+          <BulletinBoardItem refetchBoards={refetchBoards} key={board.id} board={board} onClick={onClickBoard}/>
         ))}
       </List>
       <Modal
-        aria-labelledby="modal-title"
-        aria-describedby="modal-desc"
+        aria-labelledby="Create Board"
+        aria-describedby="create board"
         open={open}
         onClose={handleClose}
         style={{
@@ -81,7 +75,7 @@ export const BoardList = ({
             boxShadow: "lg",
           }}
         >
-          <BulletinBoardCreate handleClose={handleClose} />
+          <BulletinBoardCreate refetchBoards={refetchBoards} handleClose={handleClose} />
         </Sheet>
       </Modal>
     </>

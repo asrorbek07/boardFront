@@ -7,7 +7,17 @@ import { useBulletinPostRegister } from "../hooks";
 
 import CloseIcon from "@mui/icons-material/Close";
 
-export const BulletinPostCreate = ({ boardId, handleClose, refetchBoard, refetchPostRdos }: any) => {
+export const BulletinPostCreate = (
+    {
+        boardId,
+        refetchPostRdos ,
+        handleClose,
+    }: {
+        boardId:string;
+        refetchPostRdos:()=>void;
+        handleClose:()=> void;
+    }
+) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -37,10 +47,11 @@ export const BulletinPostCreate = ({ boardId, handleClose, refetchBoard, refetch
           boardId: boardId,
         })
         .catch((e) => {
-          enqueueSnackbar(e.message, { variant: "error" });
+          enqueueSnackbar(
+              "Bulletin Post has been registered successfully",
+              { variant: "error" });
         });
         refetchPostRdos()
-        refetchBoard()
         handleClose && handleClose()
     };
     if (confirm("Are you sure want to save?")) await onSuccess();
@@ -57,7 +68,7 @@ export const BulletinPostCreate = ({ boardId, handleClose, refetchBoard, refetch
             justifyContent: "space-between",
           }}
         >
-          <Typography>Modify Bulletin Post</Typography>
+          <Typography>New Bulletin Post</Typography>
           <Button
             variant="text"
             color="primary"
@@ -77,7 +88,7 @@ export const BulletinPostCreate = ({ boardId, handleClose, refetchBoard, refetch
                   label={"Title"}
                   error={!!errors?.title}
                   helperText={errors?.title && "Title is required."}
-                  {...register("title", { required: true, maxLength: 20 })}
+                  {...register("title", { required: true, maxLength: 50 })}
                 />
               )}
               name={"title"}
@@ -90,7 +101,7 @@ export const BulletinPostCreate = ({ boardId, handleClose, refetchBoard, refetch
                   label={"Content"}
                   error={!!errors?.content}
                   helperText={errors?.content && "Content is required."}
-                  {...register("content", { required: true, maxLength: 20 })}
+                  {...register("content", { required: true, maxLength: 500 })}
                 />
               )}
               name={"content"}
@@ -118,7 +129,7 @@ export const BulletinPostCreate = ({ boardId, handleClose, refetchBoard, refetch
               color="primary"
               type={"submit"}
             >
-              Add
+              Save
             </Button>
           </Box>
         </Card>
