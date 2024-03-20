@@ -95,7 +95,6 @@ export const BulletinPostModify = ({
             sx={{ display: "flex", gap: "8px" }}
             onClick={handleClose}
           >
-            
             <CloseIcon />
           </Button>
         </Box>

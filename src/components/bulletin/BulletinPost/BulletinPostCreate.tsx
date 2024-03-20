@@ -5,9 +5,11 @@ import { useSnackbar } from "notistack";
 import { Controller, useForm } from "react-hook-form";
 import { useBulletinPostRegister } from "../hooks";
 
-export const BulletinPostCreate = ({postId}: any) => {
+import CloseIcon from "@mui/icons-material/Close";
+
+export const BulletinPostCreate = ({ boardId, handleClose, refetchBoard, refetchPostRdos }: any) => {
   const { enqueueSnackbar } = useSnackbar();
-  
+
   const {
     mutation: { registerBulletinPost },
   } = useBulletinPostRegister();
@@ -20,9 +22,11 @@ export const BulletinPostCreate = ({postId}: any) => {
     defaultValues: {
       title: "",
       content: "",
-      boardId: postId,
+      boardId: boardId,
     },
   });
+
+
 
   const handleMutate = async (data) => {
     const onSuccess = async () => {
@@ -30,11 +34,14 @@ export const BulletinPostCreate = ({postId}: any) => {
         .mutateAsync({
           title: data.title,
           content: data.content,
-          boardId: data.boardId,
+          boardId: boardId,
         })
         .catch((e) => {
           enqueueSnackbar(e.message, { variant: "error" });
         });
+        refetchPostRdos()
+        refetchBoard()
+        handleClose && handleClose()
     };
     if (confirm("Are you sure want to save?")) await onSuccess();
   };
@@ -42,23 +49,26 @@ export const BulletinPostCreate = ({postId}: any) => {
   return (
     <>
       <form onSubmit={handleSubmit(handleMutate)}>
-        <Card
+        <Box
           sx={{
+            mb: 2,
             display: "flex",
-            p: 1,
+            alignItems: "center",
             justifyContent: "space-between",
-            alignContent: "center",
-            gap: "20px",
           }}
         >
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              gap: "20px",
-              justifyContent: "space-between",
-            }}
+          <Typography>Modify Bulletin Post</Typography>
+          <Button
+            variant="text"
+            color="primary"
+            sx={{ display: "flex", gap: "8px" }}
+            onClick={handleClose}
           >
+            <CloseIcon />
+          </Button>
+        </Box>
+        <Card sx={{ p: 1, boxShadow: "none" }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: "20px" }}>
             <Controller
               render={({ field }) => (
                 <TextField
@@ -91,11 +101,23 @@ export const BulletinPostCreate = ({postId}: any) => {
             sx={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: "end",
               gap: "20px",
+              paddingTop: "30px",
             }}
           >
-            <Button sx={{p: 2}} variant="contained" color="primary" type={"submit"}>
+            <Button
+              variant="outlined"
+              onClick={handleClose}
+              type={"button"}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              type={"submit"}
+            >
               Add
             </Button>
           </Box>

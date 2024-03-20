@@ -1,24 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Card, TextField, Typography } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
-import { ModifyBulletinBoardCommand } from "~/apis";
 import { NameValueList } from "@vizendjs/accent";
-import { useBulletinBoard, useBulletinBoardModify } from "~/components";
-import { useParams } from "react-router-dom";
+import { useBulletinBoard, useBulletinBoardList, useBulletinBoardModify } from "~/components";
 import { useSnackbar } from "notistack";
 import { LoadingButton } from "@mui/lab";
 import { Board, BoardCdo, BulletinBoardCdo } from "~/models";
 
 export const BulletinBoardModify = ({
-  onSaved,
-  onCancel,
+  boardId,
+  handleClose,
+  boardItem,
 }: {
-  onSaved?: () => void;
-  onCancel?: () => void;
+  boardId: any;
+  handleClose: () => void;
+  boardItem: Board;
 }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const params = useParams<{ boardId: string }>();
-  const { board } = useBulletinBoard(params.boardId);
+  const {refetchBoards} = useBulletinBoardList()
   const {
     mutation: { modifyBulletinBoard },
   } = useBulletinBoardModify();
@@ -34,7 +33,7 @@ export const BulletinBoardModify = ({
     formState: { errors },
     setValue,
   } = useForm<Partial<BoardCdo>>({
-    defaultValues: board,
+    defaultValues: boardItem,
   });
 
   const handleMutate = async () => {
@@ -43,7 +42,7 @@ export const BulletinBoardModify = ({
         .mutateAsync(
           {
             nameValueList,
-            boardId: params.boardId,
+            boardId: boardId,
           },
           {
             onSuccess: () =>
@@ -56,12 +55,11 @@ export const BulletinBoardModify = ({
           console.log(e);
           enqueueSnackbar(e.message, { variant: "error" });
         });
-      onSaved && onSaved();
+        refetchBoards()
+      handleClose && handleClose();
     };
     if (confirm("Are you sure want to save?")) await onSuccess();
   };
-
-  const handleCancel = () => onCancel && onCancel();
 
   const handleInputChange = (name: string, value: string) => {
     const existingIndex = nameValueList.nameValues.findIndex(
@@ -83,10 +81,10 @@ export const BulletinBoardModify = ({
       <form onSubmit={handleSubmit(handleMutate)}>
         <Box
           sx={{
+            mb: 2,
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            gap: "20px",
           }}
         >
           <Typography>Modify Bulletin Board</Typography>
@@ -94,31 +92,16 @@ export const BulletinBoardModify = ({
             variant="text"
             color="primary"
             sx={{ display: "flex", gap: "8px" }}
-            onClick={handleCancel}
+            onClick={handleClose}
           >
             Back
           </Button>
         </Box>
 
-        <Card sx={{ p: 3 }}>
-          <Box
-            sx={{
-              display: "flex",
-              borderRadius: "8px",
-              padding: "40px 120px",
-              paddingRight: 0,
-              flexGrow: 1,
-            }}
-          >
+        <Card sx={{ p: 1, boxShadow: "none" }}>
+          <Box>
             <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "20px",
-                padding: "40px 120px",
-                paddingRight: 0,
-                flexGrow: 1,
-              }}
+              sx={{ display: "flex", flexDirection: "column", rowGap: "20px" }}
             >
               <Controller
                 render={({ field }) => (
@@ -163,12 +146,12 @@ export const BulletinBoardModify = ({
             sx={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: "end",
               gap: "20px",
               paddingTop: "30px",
             }}
           >
-            <Button variant="outlined" color="primary" onClick={handleCancel}>
+            <Button variant="outlined" color="primary" onClick={handleClose}>
               Cancel
             </Button>
             <LoadingButton
