@@ -18,13 +18,13 @@ import {
 } from "~/components";
 import { BulletinPostItem } from "~/components/bulletin/BulletinPost/BulletinPostItem";
 import { Sheet } from "@mui/joy";
+import {Board} from "~/models";
 
 export const BulletinPostList = ({boardId}:{boardId:string;}) => {
   const handleClose = () => setOpen(false);
   const [open, setOpen] = React.useState<boolean>(false);
   const { board, refetchBoard } = useBulletinBoard(boardId);
   const { postRdos, refetchPostRdos } = useBulletinPostList(boardId);
-
   return (
     <>
       <AppBar
@@ -71,7 +71,7 @@ export const BulletinPostList = ({boardId}:{boardId:string;}) => {
           }}
         >
           {postRdos.map((postRdo) => (
-            <BulletinPostItem key={postRdo.post.id} postRdo={postRdo} refetchPostRdos={refetchPostRdos} />
+            <BulletinPostItem key={postRdo.post.id} board={board} postRdo={postRdo} refetchPostRdos={refetchPostRdos} />
           ))}
         </List>
 

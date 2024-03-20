@@ -3,7 +3,7 @@ import {QueryResponse} from "@vizendjs/accent";
 import {BulletinBoardSeekApi} from "~/apis";
 import {Board} from "~/models";
 
-export const useBulletinBoard = (boardId: string | undefined) => {
+export const useBulletinBoard = (boardId: string) => {
     //
     const {queryKey, queryFn} = BulletinBoardSeekApi.query.findBulletinBoard({boardId:boardId});
     const {data, refetch}: UseQueryResult<QueryResponse<Board>> = useQuery({

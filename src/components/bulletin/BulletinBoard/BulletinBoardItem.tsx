@@ -68,12 +68,6 @@ export const BulletinBoardItem = (
           <ListItemText primary={board.title} />
         </ListItemButton>
         <Button
-          sx={{ m: 0, p: 1, display: "box", height: "48px" }}
-          onClick={() => onRemove(board.id)}
-        >
-          <DeleteIcon />
-        </Button>
-        <Button
           onClick={() => {
             setOpen(true);
           }}
@@ -81,6 +75,12 @@ export const BulletinBoardItem = (
         >
           <EditIcon />
         </Button>
+          <Button
+              sx={{ m: 0, p: 1, display: "box", height: "48px" }}
+              onClick={() => onRemove(board.id)}
+          >
+              <DeleteIcon color={"error"}/>
+          </Button>
       </ListItem>
 
       <Modal
