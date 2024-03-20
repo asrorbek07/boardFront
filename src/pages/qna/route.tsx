@@ -1,21 +1,21 @@
 import {RouteObject} from 'react-router-dom';
 import {Layout} from '~/layouts';
-import {FaqMainPage} from "~/pages/faq/FaqMainPage";
+import {QnaMainPage} from "~/pages/qna/QnaMainPage";
 
 export const route: RouteObject = {
-    path: 'faq',
+    path: 'qna',
     element: <Layout/>,
     handle: {
         type: "menu",
-        title: 'FAQ',
+        title: 'QNA',
         withoutAuth: true,
     },
     children: [
         {
             path:"",
-            element: <FaqMainPage/>,
+            element: <QnaMainPage/>,
             handle: {
-                title: "Faq Board",
+                title: "Qna Board",
             },
         },
     ],

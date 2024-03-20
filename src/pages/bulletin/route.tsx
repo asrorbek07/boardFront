@@ -1,6 +1,6 @@
-import { Outlet, RouteObject } from "react-router-dom";
+import { RouteObject } from "react-router-dom";
 import { Layout } from "~/layouts";
-import { IndexPage } from "~/pages/bulletin/IndexPage";
+import { BulletinMainPage } from "~/pages/bulletin/BulletinMainPage";
 
 export const route: RouteObject = {
   path: "bulletin",
@@ -13,7 +13,7 @@ export const route: RouteObject = {
   children: [
     {
       path: "",
-      element: <IndexPage />,
+      element: <BulletinMainPage />,
       handle: {
         title: "Bulletin Board",
       },
