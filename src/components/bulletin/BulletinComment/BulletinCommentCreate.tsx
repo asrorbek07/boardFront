@@ -13,15 +13,14 @@ import {useBulletinCommentRegister, useBulletinPostRegister,} from '../hooks';
 import {useParams} from "react-router-dom";
 
 
-export const BulletinCommentCreate = ({
-                               onSaved,
-                               onCancel,
-                           }: {
-    onSaved?: () => void;
-    onCancel?: () => void;
-}) => {
-    const {enqueueSnackbar} = useSnackbar();
-    const params = useParams<{postId:string}>();
+export const BulletinCommentCreate = (
+    {
+        postId,
+    }: {
+        postId:string;
+    }
+) => {
+    const { enqueueSnackbar } = useSnackbar();
     const {mutation: {registerBulletinComment},} = useBulletinCommentRegister();
     const {
         register,
@@ -31,101 +30,48 @@ export const BulletinCommentCreate = ({
     } = useForm<Partial<BulletinCommentCdo>>({
         defaultValues: {
             text: '',
-            postId: params.postId,
+            postId: postId,
         },
     });
 
     const handleMutate = async (data) => {
-        const onSuccess = async () => {
-            const response = await registerBulletinComment
-                .mutateAsync({
-                    text: data.text,
-                    postId: data.postId,
-                })
-                .catch((e) => {
-                    enqueueSnackbar(e.message, {variant: 'error'});
-                });
-            onSaved && onSaved();
-        }
-        if (confirm('Are you sure want to save?')) await onSuccess();
+        const response = await registerBulletinComment
+            .mutateAsync({
+                text: data.text,
+                postId: postId,
+            })
+            .catch((e) => {
+                enqueueSnackbar(e.message, {variant: 'error'});
+            });
     };
-
-    const handleCancel = () => onCancel && onCancel();
-
     return (
-        <>
             <form onSubmit={handleSubmit(handleMutate)}>
-                <Box
-                    sx={{
+                    <Box sx={{
                         display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        gap: '20px',
-                    }}
-                >
-                    <Typography>
-                        New Bulletin Comment
-                    </Typography>
-                    <Button variant="text" color="primary" sx={{display: 'flex', gap: '8px'}} onClick={handleCancel}>
-                        Back
-                    </Button>
-                </Box>
-
-                <Card sx={{p: 3}}>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            borderRadius: '8px',
-                            padding: '40px 120px',
-                            paddingRight: 0,
-                            flexGrow: 1,
-                        }}
-                    >
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '20px',
-                                padding: '40px 120px',
-                                paddingRight: 0,
-                                flexGrow: 1,
-                            }}
-                        >
-                            <Controller
-                                render={({field}) => (
-                                    <TextField
-                                        fullWidth
-                                        label={'Text'}
-                                        error={!!errors?.text}
-                                        helperText={
-                                            errors?.text && 'Text is required.'}
-                                        {...register('text', {required: true, maxLength: 20})}
-                                    />
-                                )}
-                                name={'text'}
-                                control={control}
-                            />
-                        </Box>
-                    </Box>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '20px',
-                            paddingTop: '30px',
-                        }}
-                    >
-                        <Button variant="outlined" color="primary" onClick={handleCancel}>
-                            Cancel
-                        </Button>
+                        flexDirection: 'row',
+                        gap: '10px',
+                        py:1,
+                            }}>
+                        <Controller
+                            name="text"
+                            control={control}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    fullWidth
+                                    label="Text"
+                                    error={!!errors?.text}
+                                    helperText={(errors?.text?.type === 'required' && "Text is required.") ||
+                                        (errors?.text?.type === 'maxLength' && "Text must be less than 2000 characters.")}
+                                    inputProps={{ maxLength: 2000 }}
+                                />
+                            )}
+                        />
                         <Button variant="contained" color="primary" type={'submit'}>
                             Add
                         </Button>
                     </Box>
-                </Card>
             </form>
-        </>
     );
 };
 

@@ -44,7 +44,7 @@ export const BulletinPostList = ({boardId}:{boardId:string;}) => {
               display: { xs: "none", sm: "block" },
               textAlign: "center",
               gap: "20px",
-              width: "100%",
+                flexGrow:1,
             }}
           >
             <Typography variant="h5" component="div">
@@ -54,10 +54,7 @@ export const BulletinPostList = ({boardId}:{boardId:string;}) => {
               {board?.description}
             </Typography>
           </Box>
-          <Divider />
-          <Box>
-            <Button onClick={() => setOpen(true)} color="primary">Add</Button>
-          </Box>
+            <Button onClick={() => setOpen(true)} color="primary" sx={{display:'box', height:'48px',width:"120px"}}>Add Post</Button>
         </Toolbar>
       </AppBar>
 

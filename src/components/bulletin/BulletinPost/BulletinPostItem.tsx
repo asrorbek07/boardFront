@@ -5,6 +5,7 @@ import {
   CardActions,
   CardContent,
   CardMedia,
+    Divider,
   Modal,
   TextField,
   Typography,
@@ -37,7 +38,7 @@ import {
   AccordionSummary,
   Sheet,
 } from "@mui/joy";
-import { BulletinCommentItem } from "../BulletinComment";
+import {BulletinCommentItem, BulletinCommentList} from "../BulletinComment";
 import { Input } from "@mui/base";
 import {useNoticeThumbUpToggle} from "~/components/notice/hooks/useNoticeThumbUpToggle";
 
@@ -56,6 +57,7 @@ export const BulletinPostItem = ({
     const thumbUps = postRdo.thumbUps as ThumbUpRecord[];
   const handleClose = () => setOpen(false);
   const [open, setOpen] = React.useState<boolean>(false);
+  const [openComments, setOpenComments] = React.useState<boolean>(false);
   const { enqueueSnackbar } = useSnackbar();
   const {
     mutation: { removeBulletinPost },
@@ -92,7 +94,7 @@ export const BulletinPostItem = ({
     if (confirm("Are you sure want to remove?")) await onSuccess();
   };
 
-    const onThumbUp = async (postId: string) => {
+  const onThumbUp = async (postId: string) => {
         const response = await toggleBulletinThumbUp
             .mutateAsync(
                 {
@@ -161,9 +163,10 @@ export const BulletinPostItem = ({
               <DeleteIcon color={"error"} sx={{ ml: "auto", height: "100%" }} />
             </Button>
           </CardActions>
-          <AccordionGroup disableDivider sx={{ width: "100%", m: 0, p: 0 }}>
+            <Divider/>
+            <AccordionGroup disableDivider sx={{ width: "100%", m: 0, p: 0 }}>
             <Accordion sx={{ m: 0, p: 0 }}>
-              <AccordionSummary
+              <AccordionSummary onClick={()=>{setOpenComments(!openComments)}}
                 sx={{
                   textAlign: "center",
                   width: "100%",
@@ -173,12 +176,8 @@ export const BulletinPostItem = ({
               >
                 Comment
               </AccordionSummary>
-              <AccordionDetails >
-                <Controller
-                  render={({}) => <TextField fullWidth label={"Add comment"} />}
-                  name="Add comment"
-                  control={control}
-                />
+              <AccordionDetails sx={{p:0,m:0}} >
+                  {openComments&&<BulletinCommentList postId={post.id}/>}
               </AccordionDetails>
             </Accordion>
           </AccordionGroup>

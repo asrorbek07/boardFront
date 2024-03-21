@@ -33,7 +33,7 @@ export const BulletinBoardList = ({
               setOpen(true);
             }}
           >
-            <p>Add</p>
+            <p>Add Board</p>
           </Button>
           <Divider />
         </Toolbar>
