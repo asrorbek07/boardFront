@@ -15,7 +15,7 @@ export default defineConfig({
 
     proxy: {
       '/api/board': {
-        target: 'https://d700-213-230-102-83.ngrok-free.app/',
+        target: 'https://e5ab-84-54-82-215.ngrok-free.app/',
         rewrite: (path) => path.replace('/api/board', '/'),
         changeOrigin: true,
         configure: (proxy) =>
