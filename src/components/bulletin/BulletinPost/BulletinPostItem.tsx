@@ -15,19 +15,19 @@ import * as React from "react";
 import { useSnackbar } from "notistack";
 import { Controller, useForm } from "react-hook-form";
 import {
-  BulletinPostModify,
-  useBulletinCommentList,
-  useBulletinPostRemove,
+    BulletinPostModify,
+    useBulletinCommentList,
+    useBulletinPostRemove, useBulletinThumbUpToggle,
 } from "~/components";
 import ThumbUpOffAlt from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
 import Visibility from "@mui/icons-material/Visibility";
 import {
-  Board,
-  BulletinPostRdo,
-  Post,
-  ReadCheck,
-  ThumbUpRecord,
+    Board,
+    BulletinPostRdo,
+    Post,
+    ReadCheck, SentenceType,
+    ThumbUpRecord,
 } from "~/models";
 import EditIcon from "@mui/icons-material/Edit";
 import {
@@ -39,6 +39,7 @@ import {
 } from "@mui/joy";
 import { BulletinCommentItem } from "../BulletinComment";
 import { Input } from "@mui/base";
+import {useNoticeThumbUpToggle} from "~/components/notice/hooks/useNoticeThumbUpToggle";
 
 export const BulletinPostItem = ({
   board,
@@ -50,16 +51,17 @@ export const BulletinPostItem = ({
   refetchPostRdos: () => void;
 }) => {
   const { commentRdos } = useBulletinCommentList(postRdo.post.id);
+    const post = postRdo.post as Post;
+    const readChecks = postRdo.readChecks as ReadCheck[];
+    const thumbUps = postRdo.thumbUps as ThumbUpRecord[];
   const handleClose = () => setOpen(false);
   const [open, setOpen] = React.useState<boolean>(false);
-  const [check, setCheck] = React.useState<boolean>(false);
   const { enqueueSnackbar } = useSnackbar();
   const {
     mutation: { removeBulletinPost },
   } = useBulletinPostRemove();
-  const post = postRdo.post as Post;
-  const readChecks = postRdo.readChecks as ReadCheck[];
-  const thumbUps = postRdo.thumbUps as ThumbUpRecord[];
+    const{mutation:{toggleBulletinThumbUp},} = useBulletinThumbUpToggle();
+
   const {
     register,
     handleSubmit,
@@ -90,9 +92,26 @@ export const BulletinPostItem = ({
     if (confirm("Are you sure want to remove?")) await onSuccess();
   };
 
-  const handleCheck = () => {
-    setCheck(!check);
-  };
+    const onThumbUp = async (postId: string) => {
+        const response = await toggleBulletinThumbUp
+            .mutateAsync(
+                {
+                    sentenceType: SentenceType.Post,
+                    sentenceId: postId
+                },
+                {
+                    onSuccess: () =>
+                        enqueueSnackbar("Bulletin Post has been thumbUp successfully", {
+                            variant: "success",
+                        }),
+                }
+            )
+            .catch((e) => {
+                console.log(e);
+                enqueueSnackbar(e.message, { variant: "error" });
+            });
+        refetchPostRdos();
+    };
 
   return (
     <>
@@ -119,11 +138,11 @@ export const BulletinPostItem = ({
           <CardActions sx={{ width: "100%", pb: 0, height: "48" }}>
             {board?.boardPolicy?.postRule?.thumbUp && (
               <Button
-                onClick={handleCheck}
+                onClick={()=>onThumbUp(post.id)}
                 size="small"
                 sx={{ height: "48px", p: 0 }}
               >
-                {!check ? <ThumbUpOffAlt /> : <ThumbUpOffAltRoundedIcon />}
+                {(thumbUps.length > 0) ? <ThumbUpOffAltRoundedIcon /> : <ThumbUpOffAlt/>}
                 <Typography variant={"subtitle1"} sx={{ ml: 1 }}>
                   {thumbUps.length}
                 </Typography>

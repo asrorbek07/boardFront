@@ -18,6 +18,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import {Sheet} from "@mui/joy";
 import {NoticePostModify} from "~/components/notice/NoticePost/NoticePostModify";
 import {useNoticeThumbUpToggle} from "~/components/notice/hooks/useNoticeThumbUpToggle";
+import ThumbUpOffAltRoundedIcon from "@mui/icons-material/ThumbUpOffAltRounded";
 
 export const NoticePostItem = (
     {
@@ -64,7 +65,6 @@ export const NoticePostItem = (
   };
 
   const onThumbUp = async (postId: string) => {
-        // const onSuccess = async () => {
             const response = await toggleNoticeThumbUp
                 .mutateAsync(
                     {
@@ -83,8 +83,6 @@ export const NoticePostItem = (
                     enqueueSnackbar(e.message, { variant: "error" });
                 });
             refetchPostRdos();
-        // };
-        // if (confirm("Are you sure want to thumbUp?")) await onSuccess();
   };
 
   return (
@@ -105,7 +103,8 @@ export const NoticePostItem = (
           </CardContent>
           <CardActions sx={{width:'100%',pb:0, height:'48'}}>
             {board?.boardPolicy?.postRule?.thumbUp&&<Button onClick={()=>onThumbUp(post.id)} size="small" sx={{height:'48px', p:0}}>
-              <ThumbUpOffAlt /><Typography variant={"subtitle1"} sx={{ml:1}}>{thumbUps.length}</Typography>
+                {(thumbUps.length > 0) ? <ThumbUpOffAltRoundedIcon /> : <ThumbUpOffAlt/>}
+                <Typography variant={"subtitle1"} sx={{ml:1}}>{thumbUps.length}</Typography>
             </Button>}
             {!(board?.boardPolicy?.postRule?.anonymous)&&<><Visibility color={"primary"} /><Typography variant={"subtitle1"} sx={{ml:1}}>{readChecks.length}</Typography> </>}
             <Button onClick={() => {setOpen(true)}} sx={{ height: "48px",p:0}}>
