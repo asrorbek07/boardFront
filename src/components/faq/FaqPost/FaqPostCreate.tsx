@@ -86,7 +86,8 @@ export const FaqPostCreate = (
                   fullWidth
                   label={"Question"}
                   error={!!errors?.title}
-                  helperText={errors?.title && "Question is required."}
+                  helperText={(errors?.title?.type === 'required' && "Question is required.") ||
+                      (errors?.title?.type === 'maxLength' && "Question must be less than 50 characters.")}
                   {...register("title", { required: true, maxLength: 50 })}
                 />
               )}

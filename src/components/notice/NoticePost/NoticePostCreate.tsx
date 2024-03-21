@@ -87,7 +87,8 @@ export const NoticePostCreate = (
                   fullWidth
                   label={"Title"}
                   error={!!errors?.title}
-                  helperText={errors?.title && "Title is required."}
+                  helperText={(errors?.title?.type === 'required' && "Title is required.") ||
+                      (errors?.title?.type === 'maxLength' && "Title must be less than 50 characters.")}
                   {...register("title", { required: true, maxLength: 50 })}
                 />
               )}
@@ -100,7 +101,8 @@ export const NoticePostCreate = (
                   fullWidth
                   label={"Content"}
                   error={!!errors?.content}
-                  helperText={errors?.content && "Content is required."}
+                  helperText={(errors?.content?.type === 'required' && "Content is required.") ||
+                      (errors?.content?.type === 'maxLength' && "Content must be less than 2000 characters.")}
                   {...register("content", { required: true, maxLength: 2000 })}
                 />
               )}

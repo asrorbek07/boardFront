@@ -110,7 +110,8 @@ export const NoticeBoardModify = (
                     fullWidth
                     label={"Title"}
                     error={!!errors?.title}
-                    helperText={errors?.title && "Title is required."}
+                    helperText={(errors?.title?.type === 'required' && "Title is required.") ||
+                        (errors?.title?.type === 'maxLength' && "Title must be less than 50 characters.")}
                     {...register(`title`, { required: false, maxLength: 50 })}
                     onChange={(e) => {
                       handleInputChange("title", e.target.value);
@@ -126,9 +127,8 @@ export const NoticeBoardModify = (
                     fullWidth
                     label={"Description"}
                     error={!!errors?.description}
-                    helperText={
-                      errors?.description && "Description is required."
-                    }
+                    helperText={(errors?.description?.type === 'required' && "Description is required.") ||
+                        (errors?.description?.type === 'maxLength' && "Desctription must be less than 200 characters.")}
                     {...register(`description`, {
                       required: false,
                       maxLength: 200,

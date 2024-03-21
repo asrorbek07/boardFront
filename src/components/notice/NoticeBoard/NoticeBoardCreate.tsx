@@ -90,7 +90,8 @@ export const NoticeBoardCreate = (
                     fullWidth
                     label={"Title"}
                     error={!!errors?.title}
-                    helperText={errors?.title && "Title is required."}
+                    helperText={(errors?.title?.type === 'required' && "Title is required.") ||
+                        (errors?.title?.type === 'maxLength' && "Title must be less than 50 characters.")}
                     {...register("title", { required: true, maxLength: 50 })}
                   />
                 )}
@@ -103,9 +104,8 @@ export const NoticeBoardCreate = (
                     fullWidth
                     label={"Description"}
                     error={!!errors?.description}
-                    helperText={
-                      errors?.description && "Description is required."
-                    }
+                    helperText={(errors?.description?.type === 'required' && "Description is required.") ||
+                        (errors?.description?.type === 'maxLength' && "Description must be less than 200 characters.")}
                     {...register("description", {
                       required: true,
                       maxLength: 200,

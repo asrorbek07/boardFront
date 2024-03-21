@@ -110,7 +110,8 @@ export const FaqPostModify = (
                                         fullWidth
                                         label={"Question"}
                                         error={!!errors?.title}
-                                        helperText={errors?.title && "Question is required."}
+                                        helperText={(errors?.title?.type === 'required' && "Question is required.") ||
+                                            (errors?.title?.type === 'maxLength' && "Question must be less than 2000 characters.")}
                                         {...register(`title`, { required: false, maxLength: 50 })}
                                         onChange={(e) => {
                                             handleInputChange("title", e.target.value);
@@ -126,9 +127,8 @@ export const FaqPostModify = (
                                         fullWidth
                                         label={"Answer"}
                                         error={!!errors?.content}
-                                        helperText={
-                                            errors?.content && "Answer is required."
-                                        }
+                                        helperText={(errors?.content?.type === 'required' && "Answer is required.") ||
+                                            (errors?.content?.type === 'maxLength' && "Answer must be less than 2000 characters.")}
                                         {...register(`content`, {
                                             required: false,
                                             maxLength: 2000,

@@ -83,7 +83,7 @@ export const FaqPostItem = (
                       >
                           {post.title}
                       </AccordionSummary>
-                      <AccordionDetails >
+                      <AccordionDetails sx={{p:0,m:0}} >
                           {post.content}
                       </AccordionDetails>
                   </Accordion>
