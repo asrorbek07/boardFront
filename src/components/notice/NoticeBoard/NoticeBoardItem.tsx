@@ -6,12 +6,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ListItem from "@mui/material/ListItem";
 import * as React from "react";
 import { useSnackbar } from "notistack";
-import {FaqBoardModify, useFaqBoardRemove,} from "~/components";
 import { Board } from "~/models";
 import { DashboardSharp } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
 import { Sheet } from "@mui/joy";
-export const FaqBoardItem = (
+import {useNoticeBoardRemove} from "~/components/notice";
+import {NoticeBoardModify} from "~/components/notice/NoticeBoard/NoticeBoardModify";
+export const NoticeBoardItem = (
     {
         board,
         onClick,
@@ -24,20 +25,20 @@ export const FaqBoardItem = (
 ) => {
   const { enqueueSnackbar } = useSnackbar();
   const {
-    mutation: { removeFaqBoard },
-  } = useFaqBoardRemove();
+    mutation: { removeNoticeBoard },
+  } = useNoticeBoardRemove();
   const [open, setOpen] = React.useState(false);
   const handleClose = () => setOpen(false);
   const onRemove = async (boardId: string) => {
     const onSuccess = async () => {
-      const response = await removeFaqBoard
+      const response = await removeNoticeBoard
         .mutateAsync(
           {
             boardId: boardId,
           },
           {
             onSuccess: () =>
-              enqueueSnackbar("FAQ Board has been removed successfully", {
+              enqueueSnackbar("Notice Board has been removed successfully", {
                 variant: "success",
               }),
           }
@@ -100,7 +101,7 @@ export const FaqBoardItem = (
             boxShadow: "lg",
           }}
         >
-          <FaqBoardModify board={board} refetchBoards={refetchBoards} handleClose={handleClose}/>
+          <NoticeBoardModify board={board} refetchBoards={refetchBoards} handleClose={handleClose}/>
         </Sheet>
       </Modal>
     </>

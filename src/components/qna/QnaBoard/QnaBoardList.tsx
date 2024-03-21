@@ -1,15 +1,17 @@
 import * as React from "react";
-import {FaqBoardCreate, FaqBoardItem, useFaqBoardList} from "~/components";
 import List from "@mui/material/List";
 import { AppBar, Button, Divider, Toolbar, Typography } from "@mui/material";
 import Sheet from "@mui/joy/Sheet";
 import { Modal } from "@mui/base";
-export const FaqBoardList = ({
+import {useQnaBoardList} from "~/components/qna/hooks";
+import {QnaBoardItem} from "~/components/qna/QnaBoard/QnaBoardItem";
+import {QnaBoardCreate} from "~/components/qna/QnaBoard/QnaBoardCreate";
+export const QnaBoardList = ({
   onClickBoard,
 }: {
   onClickBoard: (boardId) => void;
 }) => {
-    const { boards,refetchBoards } = useFaqBoardList();
+    const { boards,refetchBoards } = useQnaBoardList();
   const [open, setOpen] = React.useState<boolean>(false);
   const handleClose = () => setOpen(false);
   return (
@@ -24,7 +26,7 @@ export const FaqBoardList = ({
             component="div"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
-            FAQ Board
+            QNA Board
           </Typography>
           <Button
             sx={{ m: 0, p: 1, display: "box", height: "48px" }}
@@ -46,7 +48,7 @@ export const FaqBoardList = ({
         }}
       >
         {boards.map((board) => (
-          <FaqBoardItem refetchBoards={refetchBoards} key={board.id} board={board} onClick={onClickBoard}/>
+          <QnaBoardItem refetchBoards={refetchBoards} key={board.id} board={board} onClick={onClickBoard}/>
         ))}
       </List>
       <Modal
@@ -74,7 +76,7 @@ export const FaqBoardList = ({
             boxShadow: "lg",
           }}
         >
-          <FaqBoardCreate refetchBoards={refetchBoards} handleClose={handleClose} />
+          <QnaBoardCreate refetchBoards={refetchBoards} handleClose={handleClose} />
         </Sheet>
       </Modal>
     </>

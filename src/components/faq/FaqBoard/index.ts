@@ -1,4 +1,4 @@
 export * from './FaqBoardList';
-export * from './NewFaqBoard';
-export * from './FaqBoard';
+export * from './FaqBoardCreate';
 export * from './FaqBoardItem';
+export * from './FaqBoardModify';
