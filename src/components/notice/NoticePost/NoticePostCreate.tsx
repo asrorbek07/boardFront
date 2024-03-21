@@ -101,7 +101,7 @@ export const NoticePostCreate = (
                   label={"Content"}
                   error={!!errors?.content}
                   helperText={errors?.content && "Content is required."}
-                  {...register("content", { required: true, maxLength: 500 })}
+                  {...register("content", { required: true, maxLength: 2000 })}
                 />
               )}
               name={"content"}

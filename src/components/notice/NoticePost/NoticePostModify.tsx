@@ -131,7 +131,7 @@ export const NoticePostModify = (
                                         }
                                         {...register(`content`, {
                                             required: false,
-                                            maxLength: 500,
+                                            maxLength: 2000,
                                         })}
                                         onChange={(e) => {
                                             handleInputChange("content", e.target.value);

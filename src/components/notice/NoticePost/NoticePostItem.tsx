@@ -93,7 +93,7 @@ export const NoticePostItem = (
         sx={{ width: "80%", my: 4, mx: "auto",display:'flex',  flexDirection: 'column'}}
       >
         <Card sx={{ width: "calc(100% - 32px)", p:2 }}>
-          <CardContent>
+          <CardContent sx={{px:1,py:0}}>
             <Typography gutterBottom variant="h5" component="div">
               {post.title}
             </Typography>
@@ -101,17 +101,17 @@ export const NoticePostItem = (
               {post.content}
             </Typography>
           </CardContent>
-          <CardActions sx={{width:'100%',pb:0, height:'48'}}>
-            {board?.boardPolicy?.postRule?.thumbUp&&<Button onClick={()=>onThumbUp(post.id)} size="small" sx={{height:'48px', p:0}}>
+          <CardActions sx={{p:0, height:'36px'}}>
+            {board?.boardPolicy?.postRule?.thumbUp&&<Button onClick={()=>onThumbUp(post.id)} size="small" sx={{height:'100%',p:0}}>
                 {(thumbUps.length > 0) ? <ThumbUpOffAltRoundedIcon /> : <ThumbUpOffAlt/>}
                 <Typography variant={"subtitle1"} sx={{ml:1}}>{thumbUps.length}</Typography>
             </Button>}
-            {!(board?.boardPolicy?.postRule?.anonymous)&&<><Visibility color={"primary"} /><Typography variant={"subtitle1"} sx={{ml:1}}>{readChecks.length}</Typography> </>}
-            <Button onClick={() => {setOpen(true)}} sx={{ height: "48px",p:0}}>
+            <><Visibility color={"primary"} /><Typography variant={"subtitle1"} sx={{mr:'auto'}}>{readChecks.length}</Typography> </>
+            <Button onClick={() => {setOpen(true)}} sx={{ height: "100%",p:0}}>
               <EditIcon />
             </Button>
-            <Button size="small"  onClick={() => onRemove(post.id)} sx={{height:'48px', p:0}}>
-              <DeleteIcon color={"error"} sx={{ml:'auto', height: "100%" }} />
+            <Button size="small"  onClick={() => onRemove(post.id)} sx={{height:'100%', p:0}}>
+              <DeleteIcon color={"error"} />
             </Button>
           </CardActions>
         </Card>

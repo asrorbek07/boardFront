@@ -127,7 +127,7 @@ export const BulletinPostItem = ({
         }}
       >
         <Card sx={{ width: "calc(100% - 32px)", p: 2 }}>
-          <CardContent sx={{p:1}}>
+          <CardContent sx={{px:1,py:0}}>
             <Typography gutterBottom variant="h5" component="div">
               {post.title}
             </Typography>
