@@ -1,32 +1,33 @@
 import { Box, Button, Card, TextField, Typography } from "@mui/material";
-import { BulletinPostCdo } from "~/models";
+import {FaqPostCdo, NoticePostCdo} from "~/models";
 import { useSnackbar } from "notistack";
 
 import { Controller, useForm } from "react-hook-form";
-import { useBulletinPostRegister } from "../hooks";
-
 import CloseIcon from "@mui/icons-material/Close";
+import {useFaqPostRegister} from "~/components";
 
-export const BulletinPostCreate = ({
-  boardId,
-  refetchPostRdos,
-  handleClose,
-}: {
-  boardId: string;
-  refetchPostRdos: () => void;
-  handleClose: () => void;
-}) => {
+export const FaqPostCreate = (
+    {
+        boardId,
+        refetchPostRdos ,
+        handleClose,
+    }: {
+        boardId:string;
+        refetchPostRdos:()=>void;
+        handleClose:()=> void;
+    }
+) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const {
-    mutation: { registerBulletinPost },
-  } = useBulletinPostRegister();
+    mutation: { registerFaqPost },
+  } = useFaqPostRegister();
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<Partial<BulletinPostCdo>>({
+  } = useForm<Partial<FaqPostCdo>>({
     defaultValues: {
       title: "",
       content: "",
@@ -34,21 +35,23 @@ export const BulletinPostCreate = ({
     },
   });
 
+
+
   const handleMutate = async (data) => {
     const onSuccess = async () => {
-      const response = await registerBulletinPost
+      const response = await registerFaqPost
         .mutateAsync({
           title: data.title,
           content: data.content,
           boardId: boardId,
         })
         .catch((e) => {
-          enqueueSnackbar("Bulletin Post has been registered successfully", {
-            variant: "error",
-          });
+          enqueueSnackbar(
+              "Faq Post has been registered successfully",
+              { variant: "error" });
         });
-      refetchPostRdos();
-      handleClose && handleClose();
+        refetchPostRdos()
+        handleClose && handleClose()
     };
     if (confirm("Are you sure want to save?")) await onSuccess();
   };
@@ -64,7 +67,7 @@ export const BulletinPostCreate = ({
             justifyContent: "space-between",
           }}
         >
-          <Typography>New Bulletin Post</Typography>
+          <Typography>New Faq Post</Typography>
           <Button
             variant="text"
             color="primary"
@@ -81,9 +84,9 @@ export const BulletinPostCreate = ({
                 <TextField
                   style={{ height: "20px !important" }}
                   fullWidth
-                  label={"Title"}
+                  label={"Question"}
                   error={!!errors?.title}
-                  helperText={errors?.title && "Title is required."}
+                  helperText={errors?.title && "Question is required."}
                   {...register("title", { required: true, maxLength: 50 })}
                 />
               )}
@@ -94,9 +97,10 @@ export const BulletinPostCreate = ({
               render={({ field }) => (
                 <TextField
                   fullWidth
-                  label={"Content"}
+                  label={"Answer"}
                   error={!!errors?.content}
-                  helperText={errors?.content && "Content is required."}
+                  helperText={(errors?.content?.type === 'required' && "Answer is required.") ||
+                      (errors?.content?.type === 'maxLength' && "Answer must be less than 2000 characters.")}
                   {...register("content", { required: true, maxLength: 2000 })}
                 />
               )}
@@ -113,10 +117,18 @@ export const BulletinPostCreate = ({
               paddingTop: "30px",
             }}
           >
-            <Button variant="outlined" onClick={handleClose} type={"button"}>
+            <Button
+              variant="outlined"
+              onClick={handleClose}
+              type={"button"}
+            >
               Cancel
             </Button>
-            <Button variant="contained" color="primary" type={"submit"}>
+            <Button
+              variant="contained"
+              color="primary"
+              type={"submit"}
+            >
               Save
             </Button>
           </Box>

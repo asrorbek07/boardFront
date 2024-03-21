@@ -13,7 +13,7 @@ import { useSnackbar } from "notistack";
 import {useNoticePostRemove} from "~/components";
 import ThumbUpOffAlt from "@mui/icons-material/ThumbUpOffAlt";
 import Visibility from "@mui/icons-material/Visibility";
-import {Board, BulletinPostRdo, Post, ReadCheck, SentenceType, ThumbUpRecord} from "~/models";
+import {Board, BulletinPostRdo, NoticePostRdo, Post, ReadCheck, SentenceType, ThumbUpRecord} from "~/models";
 import EditIcon from "@mui/icons-material/Edit";
 import {Sheet} from "@mui/joy";
 import {NoticePostModify} from "~/components/notice/NoticePost/NoticePostModify";
@@ -27,7 +27,7 @@ export const NoticePostItem = (
       refetchPostRdos,
     }: {
       board?:Board;
-      postRdo:BulletinPostRdo;
+      postRdo:NoticePostRdo;
       refetchPostRdos:()=>void;
     }
 ) => {

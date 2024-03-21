@@ -2,12 +2,12 @@ import React, {useState } from "react";
 import { Box, Button, Card, TextField, Typography } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { NameValueList } from "@vizendjs/accent";
-import {useBulletinBoardModify, useBulletinPostModify} from "~/components";
+import {useFaqPostModify} from "~/components";
 import { useSnackbar } from "notistack";
 import { LoadingButton } from "@mui/lab";
-import {Board, BoardCdo, Post, PostCdo} from "~/models";
+import {Post, PostCdo} from "~/models";
 
-export const BulletinPostModify = (
+export const FaqPostModify = (
     {
         post,
         refetchPostRdos,
@@ -20,8 +20,8 @@ export const BulletinPostModify = (
 ) => {
     const { enqueueSnackbar } = useSnackbar();
     const {
-        mutation: { modifyBulletinPost },
-    } = useBulletinPostModify();
+        mutation: { modifyFaqPost },
+    } = useFaqPostModify();
 
     const [nameValueList, setNameValueList] = useState<NameValueList>({
         nameValues: [],
@@ -39,7 +39,7 @@ export const BulletinPostModify = (
 
     const handleMutate = async () => {
         const onSuccess = async () => {
-            const response = await modifyBulletinPost
+            const response = await modifyFaqPost
                 .mutateAsync(
                     {
                         nameValueList,
@@ -47,7 +47,7 @@ export const BulletinPostModify = (
                     },
                     {
                         onSuccess: () =>
-                            enqueueSnackbar("Bulletin Post has been modified successfully", {
+                            enqueueSnackbar("FAQ Post has been modified successfully", {
                                 variant: "success",
                             }),
                     }
@@ -88,7 +88,7 @@ export const BulletinPostModify = (
                         justifyContent: "space-between",
                     }}
                 >
-                    <Typography>Modify Bulletin Post</Typography>
+                    <Typography>Modify Faq Post</Typography>
                     <Button
                         variant="text"
                         color="primary"
@@ -108,9 +108,9 @@ export const BulletinPostModify = (
                                 render={({ field }) => (
                                     <TextField
                                         fullWidth
-                                        label={"Title"}
+                                        label={"Question"}
                                         error={!!errors?.title}
-                                        helperText={errors?.title && "Title is required."}
+                                        helperText={errors?.title && "Question is required."}
                                         {...register(`title`, { required: false, maxLength: 50 })}
                                         onChange={(e) => {
                                             handleInputChange("title", e.target.value);
@@ -124,10 +124,10 @@ export const BulletinPostModify = (
                                 render={({ field }) => (
                                     <TextField
                                         fullWidth
-                                        label={"Content"}
+                                        label={"Answer"}
                                         error={!!errors?.content}
                                         helperText={
-                                            errors?.content && "Content is required."
+                                            errors?.content && "Answer is required."
                                         }
                                         {...register(`content`, {
                                             required: false,
@@ -156,7 +156,7 @@ export const BulletinPostModify = (
                             Cancel
                         </Button>
                         <LoadingButton
-                            loading={modifyBulletinPost.isLoading}
+                            loading={modifyFaqPost.isLoading}
                             variant="contained"
                             color="primary"
                             type={"submit"}

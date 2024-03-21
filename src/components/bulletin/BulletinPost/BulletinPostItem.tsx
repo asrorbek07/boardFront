@@ -127,7 +127,7 @@ export const BulletinPostItem = ({
         }}
       >
         <Card sx={{ width: "calc(100% - 32px)", p: 2 }}>
-          <CardContent>
+          <CardContent sx={{p:1}}>
             <Typography gutterBottom variant="h5" component="div">
               {post.title}
             </Typography>
@@ -135,39 +135,28 @@ export const BulletinPostItem = ({
               {post.content}
             </Typography>
           </CardContent>
-          <CardActions sx={{ width: "100%", pb: 0, height: "48" }}>
+          <CardActions sx={{ width: "100%", p: 0, height: "36px" }}>
             {board?.boardPolicy?.postRule?.thumbUp && (
-              <Button
-                onClick={()=>onThumbUp(post.id)}
-                size="small"
-                sx={{ height: "48px", p: 0 }}
-              >
+              <Button onClick={()=>onThumbUp(post.id)} size="small" sx={{ height: "100%", p: 0 }}>
                 {(thumbUps.length > 0) ? <ThumbUpOffAltRoundedIcon /> : <ThumbUpOffAlt/>}
                 <Typography variant={"subtitle1"} sx={{ ml: 1 }}>
                   {thumbUps.length}
                 </Typography>
               </Button>
             )}
-            {!board?.boardPolicy?.postRule?.anonymous && (
               <>
                 <Visibility color={"primary"} />
-                <Typography variant={"subtitle1"} sx={{ ml: 1 }}>
+                <Typography variant={"subtitle1"} sx={{ mr: "auto" }}>
                   {readChecks.length}
                 </Typography>{" "}
               </>
-            )}
-            <Button
-              onClick={() => {
-                setOpen(true);
-              }}
-              sx={{ height: "48px", p: 0 }}
-            >
+            <Button onClick={() => {setOpen(true);}} sx={{ height: "100%", p: 0}}>
               <EditIcon />
             </Button>
             <Button
               size="small"
               onClick={() => onRemove(post.id)}
-              sx={{ height: "48px", p: 0 }}
+              sx={{ height: "100%", p: 0 }}
             >
               <DeleteIcon color={"error"} sx={{ ml: "auto", height: "100%" }} />
             </Button>
