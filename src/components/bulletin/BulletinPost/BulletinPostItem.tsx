@@ -4,33 +4,55 @@ import {
   Card,
   CardActions,
   CardContent,
-  CardMedia, Modal,
+  CardMedia,
+  Modal,
+  TextField,
   Typography,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ListItem from "@mui/material/ListItem";
 import * as React from "react";
 import { useSnackbar } from "notistack";
-import {BulletinPostCreate, BulletinPostModify, useBulletinPostRemove} from "~/components";
+import { Controller, useForm } from "react-hook-form";
+import {
+  BulletinPostModify,
+  useBulletinCommentList,
+  useBulletinPostRemove,
+} from "~/components";
 import ThumbUpOffAlt from "@mui/icons-material/ThumbUpOffAlt";
+import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
 import Visibility from "@mui/icons-material/Visibility";
-import {Board, BulletinPostRdo, Post, ReadCheck, ThumbUpRecord} from "~/models";
+import {
+  Board,
+  BulletinPostRdo,
+  Post,
+  ReadCheck,
+  ThumbUpRecord,
+} from "~/models";
 import EditIcon from "@mui/icons-material/Edit";
-import {Accordion, AccordionDetails, AccordionGroup, AccordionSummary, Sheet} from "@mui/joy";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionGroup,
+  AccordionSummary,
+  Sheet,
+} from "@mui/joy";
+import { BulletinCommentItem } from "../BulletinComment";
+import { Input } from "@mui/base";
 
-export const BulletinPostItem = (
-    {
-      board,
-      postRdo,
-      refetchPostRdos,
-    }: {
-      board?:Board;
-      postRdo:BulletinPostRdo;
-      refetchPostRdos:()=>void;
-    }
-) => {
+export const BulletinPostItem = ({
+  board,
+  postRdo,
+  refetchPostRdos,
+}: {
+  board?: Board;
+  postRdo: BulletinPostRdo;
+  refetchPostRdos: () => void;
+}) => {
+  const { commentRdos } = useBulletinCommentList(postRdo.post.id);
   const handleClose = () => setOpen(false);
   const [open, setOpen] = React.useState<boolean>(false);
+  const [check, setCheck] = React.useState<boolean>(false);
   const { enqueueSnackbar } = useSnackbar();
   const {
     mutation: { removeBulletinPost },
@@ -38,6 +60,12 @@ export const BulletinPostItem = (
   const post = postRdo.post as Post;
   const readChecks = postRdo.readChecks as ReadCheck[];
   const thumbUps = postRdo.thumbUps as ThumbUpRecord[];
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({});
 
   const onRemove = async (postId: string) => {
     const onSuccess = async () => {
@@ -62,14 +90,24 @@ export const BulletinPostItem = (
     if (confirm("Are you sure want to remove?")) await onSuccess();
   };
 
+  const handleCheck = () => {
+    setCheck(!check);
+  };
+
   return (
     <>
       <ListItem
         key={post.id}
         disablePadding
-        sx={{ width: "80%", my: 4, mx: "auto",display:'flex',  flexDirection: 'column'}}
+        sx={{
+          width: "80%",
+          my: 4,
+          mx: "auto",
+          display: "flex",
+          flexDirection: "column",
+        }}
       >
-        <Card sx={{ width: "calc(100% - 32px)", p:2 }}>
+        <Card sx={{ width: "calc(100% - 32px)", p: 2 }}>
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
               {post.title}
@@ -78,54 +116,96 @@ export const BulletinPostItem = (
               {post.content}
             </Typography>
           </CardContent>
-          <CardActions sx={{width:'100%',pb:0, height:'48'}}>
-            {board?.boardPolicy?.postRule?.thumbUp&&<Button size="small" sx={{height:'48px', p:0}}>
-              <ThumbUpOffAlt /><Typography variant={"subtitle1"} sx={{ml:1}}>{thumbUps.length}</Typography>
-            </Button>}
-            {!(board?.boardPolicy?.postRule?.anonymous)&&<><Visibility color={"primary"} /><Typography variant={"subtitle1"} sx={{ml:1}}>{readChecks.length}</Typography> </>}
-            <Button onClick={() => {setOpen(true)}} sx={{ height: "48px",p:0}}>
+          <CardActions sx={{ width: "100%", pb: 0, height: "48" }}>
+            {board?.boardPolicy?.postRule?.thumbUp && (
+              <Button
+                onClick={handleCheck}
+                size="small"
+                sx={{ height: "48px", p: 0 }}
+              >
+                {!check ? <ThumbUpOffAlt /> : <ThumbUpOffAltRoundedIcon />}
+                <Typography variant={"subtitle1"} sx={{ ml: 1 }}>
+                  {thumbUps.length}
+                </Typography>
+              </Button>
+            )}
+            {!board?.boardPolicy?.postRule?.anonymous && (
+              <>
+                <Visibility color={"primary"} />
+                <Typography variant={"subtitle1"} sx={{ ml: 1 }}>
+                  {readChecks.length}
+                </Typography>{" "}
+              </>
+            )}
+            <Button
+              onClick={() => {
+                setOpen(true);
+              }}
+              sx={{ height: "48px", p: 0 }}
+            >
               <EditIcon />
             </Button>
-            <Button size="small"  onClick={() => onRemove(post.id)} sx={{height:'48px', p:0}}>
-              <DeleteIcon color={"error"} sx={{ml:'auto', height: "100%" }} />
+            <Button
+              size="small"
+              onClick={() => onRemove(post.id)}
+              sx={{ height: "48px", p: 0 }}
+            >
+              <DeleteIcon color={"error"} sx={{ ml: "auto", height: "100%" }} />
             </Button>
           </CardActions>
-          <AccordionGroup disableDivider sx={{ width: '100%', m:0,p:0 }}>
-            <Accordion sx={{m:0,p:0}}>
-              <AccordionSummary sx={{textAlign:'center', width:'100%', mx:'auto', bgcolor:"inherit"}}>Comment</AccordionSummary>
-              <AccordionDetails>
-
+          <AccordionGroup disableDivider sx={{ width: "100%", m: 0, p: 0 }}>
+            <Accordion sx={{ m: 0, p: 0 }}>
+              <AccordionSummary
+                sx={{
+                  textAlign: "center",
+                  width: "100%",
+                  mx: "auto",
+                  bgcolor: "inherit",
+                }}
+              >
+                Comment
+              </AccordionSummary>
+              <AccordionDetails >
+                <Controller
+                  render={({}) => <TextField fullWidth label={"Add comment"} />}
+                  name="Add comment"
+                  control={control}
+                />
               </AccordionDetails>
             </Accordion>
           </AccordionGroup>
         </Card>
       </ListItem>
       <Modal
-          aria-labelledby="modal-title"
-          aria-describedby="modal-desc"
-          open={open}
-          onClose={handleClose}
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            width: "100%",
-            height: "100%",
-            transform: "translate(-50%, -50%)",
-            zIndex: 9,
-          }}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-desc"
+        open={open}
+        onClose={handleClose}
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          width: "100%",
+          height: "100%",
+          transform: "translate(-50%, -50%)",
+          zIndex: 9,
+        }}
       >
         <Sheet
-            variant="outlined"
-            sx={{
-              m: "15% auto",
-              maxWidth: 500,
-              borderRadius: "md",
-              p: 3,
-              boxShadow: "lg",
-            }}
+          variant="outlined"
+          sx={{
+            m: "15% auto",
+            maxWidth: 500,
+            borderRadius: "md",
+            p: 3,
+            boxShadow: "lg",
+          }}
         >
-          <BulletinPostModify post={post} refetchPostRdos={refetchPostRdos} handleClose={handleClose} />
+          <BulletinPostModify
+            post={post}
+            refetchPostRdos={refetchPostRdos}
+            handleClose={handleClose}
+          />
         </Sheet>
       </Modal>
     </>

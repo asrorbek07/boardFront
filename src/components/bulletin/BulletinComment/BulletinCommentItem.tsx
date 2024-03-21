@@ -13,18 +13,19 @@ import List from "@mui/material/List";
 import Box from "@mui/material/Box";
 import { BulletinReplyItem } from "~/components/bulletin/BulletinReply/BulletinReplyItem";
 
-export const BulletinCommentItem = ({ commentRdo }) => {
-  const comment = commentRdo.comment;
-  const thumbUps = commentRdo.thumbUps;
-  const readChecks = commentRdo.readChecks;
+
+export const BulletinCommentItem = ({ commentRdos }) => {
+  // const comment = commentRdos.comment;
+  // const thumbUps = commentRdos.thumbUps;
+  // const readChecks = commentRdos.readChecks;
   const { enqueueSnackbar } = useSnackbar();
   const params = useParams<{ boardId: string }>();
   const {
     mutation: { removeBulletinComment },
   } = useBulletinCommentRemove();
-  const { replyRdos } = useBulletinReplyList(comment.id);
+  // const { replyRdos } = useBulletinReplyList(comment.id);
   const navigate = useNavigate();
-  const onNewReply = () => navigate("comment/" + comment.id + "/reply/new");
+  // const onNewReply = () => navigate("comment/" + comment.id + "/reply/new");
   const onRemove = async (commentId: string) => {
     const onSuccess = async () => {
       const response = await removeBulletinComment
@@ -48,9 +49,11 @@ export const BulletinCommentItem = ({ commentRdo }) => {
     if (confirm("Are you sure want to remove?")) await onSuccess();
   };
 
+  console.log(commentRdos);
+  
   return (
     <>
-      <ListItem key={comment.id} disablePadding>
+      {/* <ListItem key={comment.id} disablePadding>
         <ListItemIcon>
           <QuizIcon />
         </ListItemIcon>
@@ -71,7 +74,7 @@ export const BulletinCommentItem = ({ commentRdo }) => {
             ))}
           </List>
         </nav>
-      </Box>
+      </Box> */}
     </>
   );
 };

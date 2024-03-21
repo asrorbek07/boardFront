@@ -1,5 +1,5 @@
 import { Box, Button, Card, TextField, Typography } from "@mui/material";
-import { BulletinPostCdo} from "~/models";
+import { BulletinPostCdo } from "~/models";
 import { useSnackbar } from "notistack";
 
 import { Controller, useForm } from "react-hook-form";
@@ -7,17 +7,15 @@ import { useBulletinPostRegister } from "../hooks";
 
 import CloseIcon from "@mui/icons-material/Close";
 
-export const BulletinPostCreate = (
-    {
-        boardId,
-        refetchPostRdos ,
-        handleClose,
-    }: {
-        boardId:string;
-        refetchPostRdos:()=>void;
-        handleClose:()=> void;
-    }
-) => {
+export const BulletinPostCreate = ({
+  boardId,
+  refetchPostRdos,
+  handleClose,
+}: {
+  boardId: string;
+  refetchPostRdos: () => void;
+  handleClose: () => void;
+}) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -36,8 +34,6 @@ export const BulletinPostCreate = (
     },
   });
 
-
-
   const handleMutate = async (data) => {
     const onSuccess = async () => {
       const response = await registerBulletinPost
@@ -47,12 +43,12 @@ export const BulletinPostCreate = (
           boardId: boardId,
         })
         .catch((e) => {
-          enqueueSnackbar(
-              "Bulletin Post has been registered successfully",
-              { variant: "error" });
+          enqueueSnackbar("Bulletin Post has been registered successfully", {
+            variant: "error",
+          });
         });
-        refetchPostRdos()
-        handleClose && handleClose()
+      refetchPostRdos();
+      handleClose && handleClose();
     };
     if (confirm("Are you sure want to save?")) await onSuccess();
   };
@@ -117,18 +113,10 @@ export const BulletinPostCreate = (
               paddingTop: "30px",
             }}
           >
-            <Button
-              variant="outlined"
-              onClick={handleClose}
-              type={"button"}
-            >
+            <Button variant="outlined" onClick={handleClose} type={"button"}>
               Cancel
             </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              type={"submit"}
-            >
+            <Button variant="contained" color="primary" type={"submit"}>
               Save
             </Button>
           </Box>
