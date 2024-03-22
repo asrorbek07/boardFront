@@ -1,4 +1,4 @@
-import {Button, Card, CardActions, CardContent, Modal, Typography} from "@mui/material";
+import {Button, Card, CardActions, CardContent, Divider, Modal, Typography} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ListItem from "@mui/material/ListItem";
 import * as React from "react";
@@ -16,6 +16,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import {Accordion, AccordionDetails, AccordionGroup, AccordionSummary, Sheet} from "@mui/joy";
 import {BulletinCommentModify} from "~/components/bulletin/BulletinComment/BulletinCommentModify";
+import {BulletinReplyList} from "~/components/bulletin/BulletinReply";
 
 
 export const BulletinCommentItem = (
@@ -33,6 +34,8 @@ export const BulletinCommentItem = (
     const handleClose = () => setOpen(false);
     const thumbUps = commentRdo.thumbUps;
     const { enqueueSnackbar } = useSnackbar();
+    const [openReply, setOpenReply] = React.useState<boolean>(false);
+
     const [open, setOpen] = React.useState<boolean>(false);
     const {
         mutation: { removeBulletinComment },
@@ -96,34 +99,35 @@ export const BulletinCommentItem = (
           }}
       >
         <Card sx={{ width: "calc(100% - 16px)", p: 1, bgcolor:'#F6F6F6' }}>
-          <CardContent sx={{px:1,py:0}}>
-            <Typography variant="subtitle1" color="text.secondary">
-              {comment.text}
-            </Typography>
-          </CardContent>
-          <CardActions sx={{ width: "100%", p: 0, height: "36px" }}>
-            {post?.commentRule?.thumbUp && (
-                <Button onClick={()=>onThumbUp(comment.id)} size="small" sx={{ height: "100%", p: 0,mr:'auto' }}>
-                  {(thumbUps.length > 0) ? <ThumbUpOffAltRoundedIcon /> : <ThumbUpOffAlt/>}
-                  <Typography variant={"subtitle1"} sx={{ ml: 1 }}>
-                    {thumbUps.length}
-                  </Typography>
+            <CardContent sx={{px:1,py:0}}>
+                <Typography variant="subtitle1" color="text.secondary">
+                    {comment.text}
+                </Typography>
+            </CardContent>
+            <CardActions sx={{ width: "100%", p: 0, height: "36px" }}>
+                {post?.commentRule?.thumbUp && (
+                    <Button onClick={()=>onThumbUp(comment.id)} size="small" sx={{ height: "100%", p: 0,mr:'auto' }}>
+                        {(thumbUps.length > 0) ? <ThumbUpOffAltRoundedIcon /> : <ThumbUpOffAlt/>}
+                        <Typography variant={"subtitle1"} sx={{ ml: 1 }}>
+                            {thumbUps.length}
+                        </Typography>
+                    </Button>
+                )}
+                <Button onClick={() => {setOpen(true);}} sx={{ height: "100%", p: 0}}>
+                    <EditIcon />
                 </Button>
-            )}
-            <Button onClick={() => {setOpen(true);}} sx={{ height: "100%", p: 0}}>
-              <EditIcon />
-            </Button>
-            <Button
-                size="small"
-                onClick={() => onRemove(comment.id)}
-                sx={{ height: "100%", p: 0 }}
-            >
-              <DeleteIcon color={"error"} sx={{ ml: "auto", height: "100%" }} />
-            </Button>
-          </CardActions>
+                <Button
+                    size="small"
+                    onClick={() => onRemove(comment.id)}
+                    sx={{ height: "100%", p: 0 }}
+                >
+                    <DeleteIcon color={"error"} sx={{ ml: "auto", height: "100%" }} />
+                </Button>
+            </CardActions>
+            <Divider/>
             <AccordionGroup disableDivider sx={{ width: "100%", m: 0, p: 0 }}>
                 <Accordion sx={{ m: 0, p: 0 }}>
-                    <AccordionSummary
+                    <AccordionSummary onClick={()=>{setOpenReply(!openReply)}}
                         sx={{
                             textAlign: "center",
                             width: "100%",
@@ -134,8 +138,7 @@ export const BulletinCommentItem = (
                         Reply
                     </AccordionSummary>
                     <AccordionDetails sx={{p:0,m:0}} >
-                        Test
-                        {/*<BulletinCommentList postId={post.id}/>*/}
+                        {openReply&&<BulletinReplyList commentId={comment.id} post={post}/>}
                     </AccordionDetails>
                 </Accordion>
             </AccordionGroup>

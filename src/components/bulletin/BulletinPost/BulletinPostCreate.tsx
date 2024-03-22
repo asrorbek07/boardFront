@@ -6,6 +6,8 @@ import { Controller, useForm } from "react-hook-form";
 import { useBulletinPostRegister } from "../hooks";
 
 import CloseIcon from "@mui/icons-material/Close";
+import {LoadingButton} from "@mui/lab";
+import React from "react";
 
 export const BulletinPostCreate = ({
   boardId,
@@ -118,9 +120,14 @@ export const BulletinPostCreate = ({
             <Button variant="outlined" onClick={handleClose} type={"button"}>
               Cancel
             </Button>
-            <Button variant="contained" color="primary" type={"submit"}>
+            <LoadingButton
+                loading={registerBulletinPost.isLoading}
+                variant="contained"
+                color="primary"
+                type={"submit"}
+            >
               Save
-            </Button>
+            </LoadingButton>
           </Box>
         </Card>
       </form>

@@ -5,23 +5,26 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import {BulletinReplyCdo} from '~/models';
+import {BulletinCommentCdo, BulletinReplyCdo, FaqPostCdo} from '~/models';
 import {useSnackbar} from 'notistack';
 
 import {Controller, useForm} from 'react-hook-form';
-import {useBulletinReplyRegister,} from '../hooks';
+import {useBulletinCommentRegister, useBulletinPostRegister, useBulletinReplyRegister,} from '../hooks';
 import {useParams} from "react-router-dom";
+import {LoadingButton} from "@mui/lab";
+import React from "react";
 
 
-export const BulletinReplyCreate = ({
-                               onSaved,
-                               onCancel,
-                           }: {
-    onSaved?: () => void;
-    onCancel?: () => void;
-}) => {
-    const {enqueueSnackbar} = useSnackbar();
-    const params = useParams<{commentId:string}>();
+export const BulletinReplyCreate = (
+    {
+        commentId,
+        refetchReplyRdos,
+    }: {
+        commentId:string;
+        refetchReplyRdos:()=>void;
+    }
+) => {
+    const { enqueueSnackbar } = useSnackbar();
     const {mutation: {registerBulletinReply},} = useBulletinReplyRegister();
     const {
         register,
@@ -31,101 +34,55 @@ export const BulletinReplyCreate = ({
     } = useForm<Partial<BulletinReplyCdo>>({
         defaultValues: {
             text: '',
-            commentId: params.commentId,
+            commentId: commentId,
         },
     });
 
-    const handleMutate = async (data) => {
-        const onSuccess = async () => {
-            const response = await registerBulletinReply
-                .mutateAsync({
-                    text: data.text,
-                    commentId: data.commentId,
-                })
-                .catch((e) => {
-                    enqueueSnackbar(e.message, {variant: 'error'});
-                });
-            onSaved && onSaved();
-        }
-        if (confirm('Are you sure want to save?')) await onSuccess();
+    const handleMutate = async (data,e) => {
+        const response = await registerBulletinReply
+            .mutateAsync({
+                text: data.text,
+                commentId: commentId,
+            })
+            .catch((e) => {
+                enqueueSnackbar(e.message, {variant: 'error'});
+            });
+        e.target.reset();
+        refetchReplyRdos();
     };
-
-    const handleCancel = () => onCancel && onCancel();
-
     return (
-        <>
             <form onSubmit={handleSubmit(handleMutate)}>
-                <Box
-                    sx={{
+                    <Box sx={{
                         display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        gap: '20px',
-                    }}
-                >
-                    <Typography>
-                        New Bulletin Reply
-                    </Typography>
-                    <Button variant="text" color="primary" sx={{display: 'flex', gap: '8px'}} onClick={handleCancel}>
-                        Back
-                    </Button>
-                </Box>
-
-                <Card sx={{p: 3}}>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            borderRadius: '8px',
-                            padding: '40px 120px',
-                            paddingRight: 0,
-                            flexGrow: 1,
-                        }}
-                    >
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '20px',
-                                padding: '40px 120px',
-                                paddingRight: 0,
-                                flexGrow: 1,
-                            }}
+                        flexDirection: 'row',
+                        gap: '10px',
+                        py:1,
+                            }}>
+                        <Controller
+                            name="text"
+                            control={control}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    fullWidth
+                                    label="Text"
+                                    error={!!errors?.text}
+                                    helperText={(errors?.text?.type === 'required' && "Text is required.") ||
+                                        (errors?.text?.type === 'maxLength' && "Text must be less than 2000 characters.")}
+                                    inputProps={{ maxLength: 2000 }}
+                                />
+                            )}
+                        />
+                        <LoadingButton
+                            loading={registerBulletinReply.isLoading}
+                            variant="contained"
+                            color="primary"
+                            type={"submit"}
                         >
-                            <Controller
-                                render={({field}) => (
-                                    <TextField
-                                        fullWidth
-                                        label={'Text'}
-                                        error={!!errors?.text}
-                                        helperText={
-                                            errors?.text && 'Text is required.'}
-                                        {...register('text', {required: true, maxLength: 20})}
-                                    />
-                                )}
-                                name={'text'}
-                                control={control}
-                            />
-                        </Box>
+                            Save
+                        </LoadingButton>
                     </Box>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '20px',
-                            paddingTop: '30px',
-                        }}
-                    >
-                        <Button variant="outlined" color="primary" onClick={handleCancel}>
-                            Cancel
-                        </Button>
-                        <Button variant="contained" color="primary" type={'submit'}>
-                            Add
-                        </Button>
-                    </Box>
-                </Card>
             </form>
-        </>
     );
 };
 

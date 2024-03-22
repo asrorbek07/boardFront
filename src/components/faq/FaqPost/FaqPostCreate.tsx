@@ -97,6 +97,8 @@ export const FaqPostCreate = (
             <Controller
               render={({ field }) => (
                 <TextField
+                    multiline
+                    rows={4}
                   fullWidth
                   label={"Answer"}
                   error={!!errors?.content}

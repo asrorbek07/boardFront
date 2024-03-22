@@ -1,79 +1,79 @@
-import React, {useState} from 'react';
-import {Box, Button, Card, TextField, Typography} from "@mui/material";
-import {Controller, useForm} from "react-hook-form";
-import {
-    ModifyBulletinBoardCommand,
-    ModifyBulletinCommentCommand,
-    ModifyBulletinPostCommand,
-    ModifyBulletinReplyCommand
-} from "~/apis";
-import {NameValueList} from "@vizendjs/accent";
-import {
-    useBulletinBoardModify,
-    useBulletinCommentModify,
-    useBulletinPostModify,
-    useBulletinReplyModify
-} from "~/components";
-import {useParams} from "react-router-dom";
-import {useSnackbar} from "notistack";
-import {LoadingButton} from "@mui/lab";
+import React, {useState } from "react";
+import { Box, Button, Card, TextField, Typography } from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
+import { NameValueList } from "@vizendjs/accent";
+import {useBulletinReplyModify} from "~/components";
+import { useSnackbar } from "notistack";
+import { LoadingButton } from "@mui/lab";
+import {Reply, ReplyCdo} from "~/models";
 
-export const BulletinReplyModify = ({
-                                        onSaved,
-                                        onCancel,
-                                    }: {
-    onSaved?: () => void;
-    onCancel?: () => void;
-}) => {
-    const {enqueueSnackbar} = useSnackbar();
-    const params = useParams<{replyId:string}>();
+export const BulletinReplyModify = (
+    {
+        reply,
+        refetchReplyRdos,
+        handleClose,
+    }: {
+        reply:Reply;
+        refetchReplyRdos:()=>void;
+        handleClose: () => void;
+    }
+) => {
+    const { enqueueSnackbar } = useSnackbar();
     const {
-        mutation: {modifyBulletinReply},
+        mutation: { modifyBulletinReply },
     } = useBulletinReplyModify();
 
-    const [nameValueList, setNameValueList] = useState<NameValueList>({nameValues: []});
+    const [nameValueList, setNameValueList] = useState<NameValueList>({
+        nameValues: [],
+    });
 
     const {
         register,
         handleSubmit,
         control,
-        formState: {errors},
+        formState: { errors },
         setValue,
-    } = useForm<Partial<ModifyBulletinReplyCommand>>({
-        defaultValues: {
-            replyId: params.replyId,
-            nameValueList: {nameValues : []} as NameValueList,
-        },
+    } = useForm<Partial<ReplyCdo>>({
+        defaultValues: reply,
     });
 
     const handleMutate = async () => {
         const onSuccess = async () => {
             const response = await modifyBulletinReply
-                .mutateAsync({
-                    nameValueList,
-                    replyId:params.replyId
-                }, {
-                    onSuccess: () => enqueueSnackbar("Bulletin Reply has been modified successfully", {variant: 'success'}),
-                })
+                .mutateAsync(
+                    {
+                        nameValueList,
+                        replyId: reply.id,
+                    },
+                    {
+                        onSuccess: () =>
+                            enqueueSnackbar("Bulletin Reply has been modified successfully", {
+                                variant: "success",
+                            }),
+                    }
+                )
                 .catch((e) => {
-                    console.log(e)
-                    enqueueSnackbar(e.message, {variant: 'error'});
+                    console.log(e);
+                    enqueueSnackbar(e.message, { variant: "error" });
                 });
-            onSaved && onSaved();
-        }
-        if (confirm('Are you sure want to save?')) await onSuccess()
+            refetchReplyRdos()
+            handleClose && handleClose();
+        };
+        if (confirm("Are you sure want to save?")) await onSuccess();
     };
 
-    const handleCancel = () => onCancel && onCancel();
-
     const handleInputChange = (name: string, value: string) => {
-        const existingIndex = nameValueList.nameValues.findIndex((nv) => nv.name === name);
+        const existingIndex = nameValueList.nameValues.findIndex(
+            (nv) => nv.name === name
+        );
         if (existingIndex !== -1) {
             const updatedNameValues = [...nameValueList.nameValues];
             updatedNameValues[existingIndex].value = value;
-            setNameValueList({nameValues: updatedNameValues});
+            setNameValueList({ nameValues: updatedNameValues });
         } else {
-            setNameValueList({nameValues: [...nameValueList.nameValues, {name, value}]});
+            setNameValueList({
+                nameValues: [...nameValueList.nameValues, { name, value }],
+            });
         }
     };
 
@@ -82,99 +82,69 @@ export const BulletinReplyModify = ({
             <form onSubmit={handleSubmit(handleMutate)}>
                 <Box
                     sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        gap: '20px',
+                        mb: 2,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
                     }}
                 >
-                    <Typography>
-                        Modify Bulletin Post
-                    </Typography>
-                    <Button variant="text" color="primary" sx={{display: 'flex', gap: '8px'}} onClick={handleCancel}>
+                    <Typography>Modify Bulletin Reply</Typography>
+                    <Button
+                        variant="text"
+                        color="primary"
+                        sx={{ display: "flex", gap: "8px" }}
+                        onClick={handleClose}
+                    >
                         Back
                     </Button>
                 </Box>
 
-                <Card sx={{p: 3}}>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            borderRadius: '8px',
-                            padding: '40px 120px',
-                            paddingRight: 0,
-                            flexGrow: 1,
-                        }}
-                    >
+                <Card sx={{ p: 1, boxShadow: "none" }}>
+                    <Box>
                         <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '20px',
-                                padding: '40px 120px',
-                                paddingRight: 0,
-                                flexGrow: 1,
-                            }}
+                            sx={{ display: "flex", flexDirection: "column", rowGap: "20px" }}
                         >
-
                             <Controller
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <TextField
                                         fullWidth
-                                        label={'text'}
-                                        error={!!errors?.nameValueList?.nameValues}
-                                        // helperText={errors?.nameValueList && 'Title is required.'}
-                                        {...register(`nameValueList.nameValues.${0}.${"text"}`, {required: false, maxLength: 200})}
+                                        label={"Text"}
+                                        error={!!errors?.text}
+                                        helperText={(errors?.text?.type === 'required' && "Text is required.") ||
+                                            (errors?.text?.type === 'maxLength' && "Text must be less than 2000 characters.")}
+                                        {...register(`text`, { required: false, maxLength: 2000 })}
                                         onChange={(e) => {
-                                            // setValue('description', e.target.value);
-                                            handleInputChange('text', e.target.value);
+                                            handleInputChange("text", e.target.value);
                                         }}
                                     />
                                 )}
-                                name='nameValueList.nameValues'
+                                name="text"
                                 control={control}
                             />
-                            <Controller
-                                render={({field}) => (
-                                    <TextField
-                                        fullWidth
-                                        label={'Display Name'}
-                                        error={!!errors?.nameValueList?.nameValues}
-                                        // helperText={errors?.nameValueList && 'Description is required.'}
-                                        {...register(`nameValueList.nameValues.${1}.${"displayName"}`, {required: false, maxLength: 50})}
-                                        onChange={(e) => {
-                                            // setValue('description', e.target.value);
-                                            handleInputChange('displayName', e.target.value);
-                                        }}
-                                    />
-                                )}
-                                name='nameValueList.nameValues'
-                                control={control}
-                            />
-
                         </Box>
                     </Box>
                     <Box
                         sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '20px',
-                            paddingTop: '30px',
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "end",
+                            gap: "20px",
+                            paddingTop: "30px",
                         }}
                     >
-                        <Button variant="outlined" color="primary" onClick={handleCancel}>
+                        <Button variant="outlined" color="primary" onClick={handleClose}>
                             Cancel
                         </Button>
-                        <LoadingButton loading={modifyBulletinReply.isLoading} variant="contained" color="primary"
-                                       type={'submit'}>
-                            Modify
+                        <LoadingButton
+                            loading={modifyBulletinReply.isLoading}
+                            variant="contained"
+                            color="primary"
+                            type={"submit"}
+                        >
+                            Save
                         </LoadingButton>
                     </Box>
                 </Card>
-
-
-                ...
             </form>
         </>
     );

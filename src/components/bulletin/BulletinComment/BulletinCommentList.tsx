@@ -10,7 +10,7 @@ export const BulletinCommentList = ({ postId }) => {
 
     return(
         <>
-            <BulletinCommentCreate postId={postId}/>
+            <BulletinCommentCreate postId={postId} refetchCommentRdos={refetchCommentRdos}/>
             <List sx={{p:0,pt:1}}>
                 {commentRdos.map(commentRdo => (
                     <BulletinCommentItem post={post} commentRdo={commentRdo} refetchCommentRdos={refetchCommentRdos}/>

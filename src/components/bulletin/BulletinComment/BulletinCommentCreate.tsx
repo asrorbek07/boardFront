@@ -11,13 +11,17 @@ import {useSnackbar} from 'notistack';
 import {Controller, useForm} from 'react-hook-form';
 import {useBulletinCommentRegister, useBulletinPostRegister,} from '../hooks';
 import {useParams} from "react-router-dom";
+import {LoadingButton} from "@mui/lab";
+import React from "react";
 
 
 export const BulletinCommentCreate = (
     {
         postId,
+        refetchCommentRdos,
     }: {
         postId:string;
+        refetchCommentRdos:()=>void;
     }
 ) => {
     const { enqueueSnackbar } = useSnackbar();
@@ -34,7 +38,7 @@ export const BulletinCommentCreate = (
         },
     });
 
-    const handleMutate = async (data) => {
+    const handleMutate = async (data, e) => {
         const response = await registerBulletinComment
             .mutateAsync({
                 text: data.text,
@@ -43,6 +47,8 @@ export const BulletinCommentCreate = (
             .catch((e) => {
                 enqueueSnackbar(e.message, {variant: 'error'});
             });
+        e.target.reset();
+        refetchCommentRdos();
     };
     return (
             <form onSubmit={handleSubmit(handleMutate)}>
@@ -67,9 +73,14 @@ export const BulletinCommentCreate = (
                                 />
                             )}
                         />
-                        <Button variant="contained" color="primary" type={'submit'}>
-                            Add
-                        </Button>
+                        <LoadingButton
+                            loading={registerBulletinComment.isLoading}
+                            variant="contained"
+                            color="primary"
+                            type={"submit"}
+                        >
+                            Save
+                        </LoadingButton>
                     </Box>
             </form>
     );
